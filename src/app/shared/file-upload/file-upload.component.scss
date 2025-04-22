@@ -1,0 +1,33 @@
+.upload-container {
+    border-radius: 15px;
+    border: 3px dashed #CAD3DD;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .upload-container  button {
+    background: #fcfdfd;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #7992ad;
+    border-width: 4px;
+  }
+  
+  .file-support {
+    color: #cecece;
+    font-family: "Trajan Pro", sans-serif;
+    font-size: 12;
+    font-weight: 400;
+  }
+  
+  .upload-container{
+    p{
+        color: #acacac;
+        text-align: center;
+        font-family: "Trajan Pro", sans-serif;
+        font-size: 13.12px;
+        font-weight: 400;
+    }
+  }
+  

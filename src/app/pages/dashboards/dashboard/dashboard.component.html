@@ -1,0 +1,76 @@
+
+<div class="row">
+    <div class="col-lg-4">
+      <div class="card chart-card">
+        <div class="card-body  p-0">
+          <div class="chart-sub">
+          <div class="chart-count">4,573</div>
+          <div class="chart-title">Active Programs</div>
+        </div>
+          <div class="chartjs-chart">
+            <!-- Line Chart -->
+            <apx-chart [series]="studentChart.series" [chart]="studentChart.chart"
+                        [dataLabels]="studentChart.dataLabels" [stroke]="studentChart.stroke" [legend]="studentChart.legend"
+                        [xaxis]="studentChart.xaxis" [yaxis]="studentChart.yaxis" [grid]="studentChart.grid"
+                        [colors]="studentChart.colors" [fill]="studentChart.fill" dir="ltr"></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card chart-card">
+        <div class="card-body p-0">
+          <div class="chart-sub">
+          <div class="chart-count">4,573</div>
+          <div class="chart-title">Active Programs</div>
+        </div>
+          <div class="chartjs-chart">
+            <!-- Line Chart -->
+            <apx-chart [series]="studentChart.series" [chart]="studentChart.chart"
+            [dataLabels]="studentChart.dataLabels" [stroke]="studentChart.stroke" [grid]="studentChart.grid"
+            [legend]="studentChart.legend" [xaxis]="studentChart.xaxis" [yaxis]="studentChart.yaxis"
+            [colors]="studentChart.colors" [fill]="studentChart.fill" dir="ltr"></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card chart-card">
+        <div class="card-body p-0">
+          <div class="chart-sub">
+          <div class="chart-count">4,573</div>
+          <div class="chart-title">Active Programs</div>
+        </div>
+          <div class="chartjs-chart">
+            <!-- Line Chart -->
+            <apx-chart [series]="studentChart.series" [chart]="studentChart.chart" [grid]="studentChart.grid"
+            [dataLabels]="studentChart.dataLabels" [stroke]="studentChart.stroke"
+            [xaxis]="studentChart.xaxis" [yaxis]="studentChart.yaxis" [legend]="studentChart.legend"
+            [colors]="studentChart.colors" [fill]="studentChart.fill" dir="ltr"></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="card active-students-card">
+        <div class="card-body">
+          <div class="row justify-between">
+               <div class="card_title col-10">ACTIVE STUDENTS</div>
+               <div class="col-2">
+                <select class="form-control select-dropdown">
+                  <option>1 Week</option>
+                </select>
+              </div>
+          </div>
+          <div class="chartjs-chart">
+            <!-- Line Chart -->
+            <apx-chart [series]="splineAreaChart.series" [chart]="splineAreaChart.chart"
+                        [dataLabels]="splineAreaChart.dataLabels" [stroke]="splineAreaChart.stroke"
+                        [legend]="splineAreaChart.legend" [xaxis]="splineAreaChart.xaxis" [yaxis]="splineAreaChart.yaxis"
+                        [colors]="splineAreaChart.colors" [fill]="splineAreaChart.fill" dir="ltr"></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

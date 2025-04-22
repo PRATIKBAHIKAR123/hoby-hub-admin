@@ -1,0 +1,54 @@
+
+
+      <div class="modal-header text-white">
+        <h5 class="modal-title" id="locationPopupLabel">Select Location</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" data-bs-dismiss="modal" aria-label="Close" ></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Map Image -->
+        <div #mapContainer class="map-container mb-3"></div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-control" placeholder="Address" name="address"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Joined Date</label>
+              <input type="date" class="form-control" name="joinedDate"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Area</label>
+              <input type="text" class="form-control" placeholder="Area" name="area"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">City</label>
+              <input type="text" class="form-control" placeholder="City" name="city"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Code</label>
+              <input type="text" class="form-control" placeholder="Code" name="code"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Country</label>
+              <input type="text" class="form-control" placeholder="Country" name="country"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Pincode</label>
+              <input type="text" class="form-control" placeholder="Pincode" name="pincode"/>
+            </div>
+          </div>
+        </form>
+    </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeModal()" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Next</button>
+      </div>
+
+

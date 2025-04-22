@@ -1,0 +1,17 @@
+//
+// forms.scss
+//
+
+:is([type="tel"], [type="url"], [type="email"], [type="number"]){
+    &::placeholder {
+        text-align: left /*rtl: right*/;
+    }
+}
+
+.form-label{
+    color: #000000 !important;
+    text-align: left;
+    font-family: "Trajan Pro Bold", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+}

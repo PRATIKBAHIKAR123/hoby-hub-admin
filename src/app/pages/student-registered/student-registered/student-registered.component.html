@@ -1,0 +1,119 @@
+<div class="card p-2 mt-3 mr-2 ml-2 rounded-4" style="background: #F6F8F9;">
+    <h6 class="chart-title  p-1 mt-2 fw-semibold">Student History</h6>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card chart-card">
+                <div class="card-body  p-0">
+                    <div class="chart-sub">
+                        <div class="chart-count">4,573</div>
+                        <div class="chart-title">ACTIVE PROGRAMS</div>
+                    </div>
+                    <div class="chartjs-chart">
+                        <!-- Line Chart -->
+                        <apx-chart [series]="studentChart.series" [chart]="studentChart.chart"
+                            [dataLabels]="studentChart.dataLabels" [stroke]="studentChart.stroke"
+                            [legend]="studentChart.legend" [xaxis]="studentChart.xaxis" [yaxis]="studentChart.yaxis"
+                            [grid]="studentChart.grid" [colors]="studentChart.colors" [fill]="studentChart.fill"
+                            dir="ltr"></apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card chart-card">
+                <div class="card-body p-0">
+                    <div class="chart-sub">
+                        <div class="chart-count">4,573</div>
+                        <div class="chart-title">EXPIRED PROGRAMS</div>
+                    </div>
+                    <div class="chartjs-chart">
+                        <!-- Line Chart -->
+                        <apx-chart [series]="studentChart.series" [chart]="studentChart.chart"
+                            [dataLabels]="studentChart.dataLabels" [stroke]="studentChart.stroke"
+                            [grid]="studentChart.grid" [legend]="studentChart.legend" [xaxis]="studentChart.xaxis"
+                            [yaxis]="studentChart.yaxis" [colors]="studentChart.colors" [fill]="studentChart.fill"
+                            dir="ltr"></apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="d-flex justify-content-between align-items-center p-2">
+            <div class="d-flex align-items-center">
+                <h5 class="card_title fw-bold mb-0 me-2">STUDENT REGISTERED</h5>
+                <div class="btn-group">
+                    <button class="btn bg-white dropdown-toggle" type="button" id="dropdownMenuClickableOutside"
+                        data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false">
+                        Filter <i class="ri-arrow-down-s-line label-icon align-middle fs-16 me-2"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableOutside">
+                        <li><a class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary bg-white text-black waves-effect waves-light">
+                    Update Progress
+                </button>
+                <button type="button" class="btn btn-primary  waves-effect waves-light">
+                    <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i>Add Student
+                </button>
+            </div>
+        </div>
+
+        <div class="card table-responsive black_labels_table mt-2 ">
+            <table class="table table-hover align-middle  mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col "></th>
+                        <th scope="col">Student ID</th>
+                        <th scope="col">Student Name</th>
+                        <th scope="col">Program</th>
+                        <th scope="col">Class Name</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Previous Level</th>
+                        <th scope="col">New Level</th>
+                        <th scope="col">Certificate Issued</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of tableData">
+                        <th scope="row">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </th>
+                        <td>{{ i.learnerId }}</td>
+                        <td>{{ i.learnerName }}</td>
+                        <td class="d-flex">
+                            <div>
+                                <div>{{ i.program }}</div>
+                                <div>{{ i.location }}</div>
+                            </div>
+                        </td>
+                        <td>{{ i.className }}</td>
+                        <td>{{ i.status }}</td>
+                        <td>{{ i.previousLevel }}</td>
+                        <td>{{ i.newLevel }}</td>
+                        <td>{{ i.certificateIssued }}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+        <div class="col col-sm-12">
+            <div class="text-sm-right  listjs-pagination">
+                <ngb-pagination [collectionSize]="30" [pageSize]="10">
+                    <ng-template ngbPaginationPrevious><img src="assets/images/icons/Down 4.png" height="24"
+                            width="24" />
+                        Back</ng-template>
+                    <ng-template ngbPaginationNext>Next <img src="assets/images/icons/Down 5.png" height="24"
+                            width="24" /></ng-template>
+                </ngb-pagination>
+            </div>
+        </div>
+    </div>
+</div>

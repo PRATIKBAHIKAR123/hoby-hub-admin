@@ -1,0 +1,79 @@
+.tools-menu {
+    position: absolute;
+    bottom: 20px; // Adds margin from the bottom
+    left: 0;
+    width: 100%;
+    // padding: 14px;
+
+    .header-profile-user {
+        width: 39px;
+        height: 39px;
+    }
+
+    .user-name-text {
+        color: #868686;
+        text-align: left;
+        font-family: "Trajan Pro Bold", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .user-name-sub-text {
+        color: #9f9f9f;
+        text-align: left;
+        font-family: "Trajan Pro", sans-serif;
+        font-size: 8px;
+        font-weight: 400;
+    }
+
+    .app-menu {
+        width: 250px;
+        min-width: 220px;
+        max-width: 280px;
+    }
+
+    @media (max-width: 1400px) {
+
+        .user-name-text,
+        .user-name-sub-text {
+            font-size: 12px;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .user-name-text {
+            display: none;
+            /* Hide name on smaller screens */
+        }
+
+        .user-name-sub-text {
+            display: none;
+        }
+
+        .tools-menu img {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .sidebar-menu-scroll {
+        position: relative;
+        height: calc(100vh - 80px); // Adjust height to accommodate the tools-menu
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .tools-menu ul {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; // Aligns items in center if needed
+    }
+}

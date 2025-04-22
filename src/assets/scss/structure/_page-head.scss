@@ -1,0 +1,53 @@
+// 
+// _page-head.scss
+// 
+
+.page-title-box {
+    padding: 10px $grid-gutter-width;
+    
+
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }
+
+    h4 {
+        color: #686869;
+        text-align: left;
+        font-family: "Trajan Pro Bold", sans-serif;
+        font-size: 18.600000381469727px;
+        font-weight: 700;
+    }
+}
+
+[data-layout="horizontal"] {
+    .page-title-box {
+        padding: 1.2rem 0;
+        background-color: transparent !important;
+        border-bottom: none;
+        border-top: none;
+        box-shadow: none;
+        margin: 0;
+
+        @media (min-width: 1024.1px) {
+            margin: -19px 0 0 0;
+        }
+    }
+}
+
+[data-layout="vertical"] {
+    &[data-layout-style="detached"]{
+        .page-title-box {
+            padding: 1.2rem 0;
+            background-color: transparent !important;
+            border-bottom: none;
+            border-top: none;
+            box-shadow: none;
+            margin: 0;
+    
+            @media (min-width: 1024.1px) {
+                margin: -19px 0 0 0;
+            }
+        }
+    }
+}

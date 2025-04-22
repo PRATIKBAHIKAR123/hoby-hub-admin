@@ -1,0 +1,38 @@
+<div class="profile-container">
+    <h2>My Profile</h2>
+    <div class="profile-header">
+      <img [src]="user.profileImage" alt="Profile Picture" class="profile-img">
+      <h3>{{ user.name }}</h3>
+      <p class="role">{{ user.role }}</p>
+    </div>
+
+    <hr class="hr">
+  
+    <div class="row">
+        <div class="col-lg-6 mb-2">
+          <label class="profile-label">User Email</label>
+          <input type="text" class="profile-form-control" [value]="user.email" disabled>
+        </div>
+        <div class="col-lg-6 mb-2">
+          <label class="profile-label">Joined Date</label>
+          <input type="text" class="profile-form-control" [value]="user.joinedDate" disabled>
+        </div>
+      
+      
+        <div class="col-lg-6 mb-2">
+          <label class="profile-label">Phone Number</label>
+          <input type="text" class="profile-form-control" [value]="user.phone" disabled>
+        </div>
+        <div class="col-lg-6 mb-2">
+          <label class="profile-label">Location</label>
+          <input type="text" class="profile-form-control" [value]="user.location" disabled>
+        </div>
+      
+    </div>
+  
+    <div class="profile-buttons">
+      <button class="btn btn-outline-dark" (click)="closeProfile()">Close</button>
+      <button class="btn btn-primary waves-effect waves-light" (click)="editProfile()">Edit Profile</button>
+    </div>
+  </div>
+  

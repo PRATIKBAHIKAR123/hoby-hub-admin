@@ -1,0 +1,292 @@
+<div>
+    <div class="form-title">
+        Institute Details
+
+    </div>
+    <div class="form-section">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Program Tittle</label>
+                        <input type="text" class="form-control" id="placeholderInput" placeholder="Program Tittle">
+                        
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput1" class="form-label">Institute Name</label>
+                        <input type="text" class="form-control" id="placeholderInput1" placeholder="Institute Name">
+                        
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput1" class="form-label">Since</label>
+                        <input type="text" class="form-control" id="placeholderInput1" placeholder="Since">
+                        
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput1" class="form-label">GST No.</label>
+                        <input type="text" class="form-control" id="placeholderInput1" placeholder="GST No.">
+                        
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="placeholderInput" class="form-label">Photos</label>
+            <app-file-upload [acceptedFormats]="'.jpg,.png,'" (fileSelected)="handleFile($event)"></app-file-upload>
+            <div *ngIf="images.length > 0" class="image-grid mt-3">
+                <div *ngFor="let src of images; let i = index" class="image-container">
+                  <img [src]="src" alt="Uploaded" class="img-fluid rounded">
+                  <button class="btn btn-danger btn-sm mt-1" (click)="removeImage(i)">Remove</button>
+                </div>
+              </div>
+        </div>
+        <div class="col-12 mb-3">
+            <div>
+                
+                    <label for="placeholderInput1" class="form-label">Introduction.</label>
+                    <textarea type="text" class="form-control" id="placeholderInput1" rows="6" placeholder="Introduction"></textarea>
+                    
+            </div>
+        </div>
+
+            </div>
+
+    </div>
+</div>
+
+
+<div>
+    <div class="form-title">
+        Additional information
+
+    </div>
+    <div class="form-section">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Website Name</label>
+                        <input type="text" class="form-control" id="placeholderInput" placeholder="Website Name">
+                        
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput1" class="form-label">Class Level</label>
+                        <input type="text" class="form-control" id="placeholderInput1" placeholder="Class Level">
+                        
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput1" class="form-label">instagram Account</label>
+                        <input type="text" class="form-control" id="placeholderInput1" placeholder="instagram Account">
+                        
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput1" class="form-label">YouTube account</label>
+                        <input type="text" class="form-control" id="placeholderInput1" placeholder="YouTube account">
+                        
+                </div>
+            </div>
+            </div>
+          
+    </div>
+</div>
+<button type="button" class="btn btn-outline-dark waves-effect waves-light material-shadow-none mt-4" (click)="openDetailsOptionsModal(addDetailsmodal)">+ Add Class Details</button>
+
+<div *ngIf="showClassDetails">
+    <div class="form-title">
+        Class Details
+
+    </div>
+    <div class="form-section">
+        <div class="row">
+            
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Class Name</label>
+                        <input type="text" class="form-control" id="placeholderInput" placeholder="Class Name">
+                        
+                </div>
+            </div>
+
+            <div class="col-3 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Category</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Category">
+                            <option value="1">Category 1</option>
+                            <option value="2">Category 2</option>
+                            </select>
+                        
+                </div>
+            </div>
+            <div class="col-3 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Sub Category</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Sub Category">
+                            <option value="1">Category 1</option>
+                            <option value="2">Category 2</option>
+                            </select>
+                        
+                </div>
+            </div>
+
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Location</label>
+                        
+                            <div class="input-group">
+                                <select type="text" class="form-select" id="placeholderInput" placeholder="Location">
+                                    <option value="1">Pune</option>
+                                    <option value="2">Indore</option>
+                                    </select>
+                                    <button type="button" class="btn btn-outline-dark waves-effect material-shadow-none" (click)="openLocationPopup()"><i class="mdi mdi-plus"></i>Add</button>
+                                </div>
+                        
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Contact</label>
+                        <div class="input-group">
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Contact">
+                            <option value="1">Contact</option>
+                            <option value="2">Contact</option>
+                            </select>
+                            <button type="button" class="btn btn-outline-dark waves-effect material-shadow-none" (click)="openContactPopup()"><i class="mdi mdi-plus"></i>Add</button>
+                        </div>
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Time</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Time">
+                            <option value="1">Morning</option>
+                            <option value="2">Afternoon</option>
+                            </select>
+                        
+                </div>
+            </div>
+
+            <div class="col-6 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Institute Name</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Institute Name">
+                            <option value="1">Institute Name</option>
+                            <option value="2">Institute Name</option>
+                            </select>
+                        
+                </div>
+            </div>
+
+            <div class="col-3 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Gender</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Gender">
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                            </select>
+                        
+                </div>
+            </div>
+            <div class="col-3 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Age</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Gender">
+                            <option value="1">10</option>
+                            <option value="2">15</option>
+                            </select>
+                        
+                </div>
+            </div>
+
+            <div class="col-3 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Institute Name</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Institute Name">
+                            <option value="1">Institute Name</option>
+                            <option value="2">Institute Name</option>
+                            </select>
+                        
+                </div>
+            </div>
+            <div class="col-3 mb-3">
+                <div>
+                    
+                        <label for="placeholderInput" class="form-label">Institute Name</label>
+                        <select type="text" class="form-select" id="placeholderInput" placeholder="Institute Name">
+                            <option value="1">Institute Name</option>
+                            <option value="2">Institute Name</option>
+                            </select>
+                        
+                </div>
+            </div>
+
+    </div>
+</div>
+</div>
+
+<div class="mt-2">
+    
+    <div class="form-section">
+        <div class="form-title">
+            Directory
+        </div>
+        <app-directory></app-directory>
+    </div>
+</div>
+<div class="text-end mt-2 gap-2">
+    <!-- <button type="button" class="btn btn-ghost-primary waves-effect waves-light material-shadow-none">Cancel</button> -->
+    <button type="button" class="btn btn-primary waves-effect waves-light ml-2"><span>Submit</span></button>
+</div>
+
+<ng-template #addDetailsmodal let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" (click)="closeModal()" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="d-flex justify-content-center gap-3">
+            <!-- Class Details Card -->
+            <div class="card col-6 align-items-center text-center p-3 cursor-pointer shadow-sm" (click)="selectClassDetails()">
+              <img src="assets/images/Video.svg" height="56" width="56" alt="Class Details">
+              <h3 class="h6 mt-2">Class Details</h3>
+              <p class="text-muted fw-medium">Provide class-related information</p>
+            </div>
+            <!-- Course Form Card -->
+            <div class="card col-6 align-items-center text-center p-3 cursor-pointer shadow-sm">
+              <img src="assets/images/Books.svg" height="56" width="56" alt="Course Form">
+              <h3 class="h6 mt-2">Course Form</h3>
+              <p class="text-muted fw-medium">Fill in course details</p>
+            </div>
+          </div>
+          <button type="button" class="btn w-100 btn-outline-secondary mt-3" (click)="closeModal()" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+</ng-template>

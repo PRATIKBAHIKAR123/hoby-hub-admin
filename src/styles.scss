@@ -1,0 +1,124 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+// Swiper
+.coverflowslide .slide {
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.coverflowslide .slick-list {
+    overflow: hidden !important;
+}
+
+.coverflowslide .slick-center {
+    transform: scale(1.2); // Adjust the scale factor for the "Coverflow" effect
+    z-index: 1;
+}
+
+.coverflowslide .carousel {
+    width: 100%;
+    max-width: 600px; // Adjust the carousel width as needed
+    margin: 0 auto;
+}
+
+.space .slick-slide {
+    margin: 10px;
+}
+
+#notificationItemsTabContent {
+    .avatar-title {
+        height: 30px !important;
+        width: 30px !important;
+    }
+}
+
+[data-bs-theme="dark"] {
+    .fc {
+        .fc-multimonth-daygrid {
+            background: #212529 !important;
+
+        }
+
+        .fc-day-disabled {
+            background: #282b2e !important;
+        }
+
+        .fc-multimonth {
+            border-color: #32383e !important;
+        }
+    }
+}
+
+.page{
+    background: #F5F5F5;
+}
+
+.table-responsive{
+    margin-inline: 16px;
+    margin-block: 22px;
+}
+
+.grey_labels_table th{
+    color: #b2b7bf !important;
+    font-family: "Trajan Pro Bold", sans-serif;
+    font-size: 11.80000019
+}
+
+.grey_labels_table td{
+    color: #b2b7bf !important;
+    font-family: "Trajan Pro Bold", sans-serif;
+    font-size: 11.80000019
+}
+
+.black_labels_table th {
+    color: #000000 !important;
+    font-family: "Trajan Pro Bold", sans-serif;
+    font-size: 11.80000019
+}
+
+.black_labels_table td {
+    color: #000000 !important;
+    font-family: "Trajan Pro Bold", sans-serif;
+    font-size: 11.80000019
+}
+
+.btn{
+    font-family: "Trajan Pro", sans-serif;
+}
+
+.btn-primary span{
+    display: flex;
+    align-items: center;
+}
+
+.bg-success {
+    border: #10BC00 2px solid;
+    color: #10BC00 !important;
+}
+
+.form-title{
+    color: #05244f;
+    text-align: left;
+    font-family: "Trajan Pro Bold", sans-serif;
+    font-size: 17.12px;
+    font-weight: 700;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-block: 10px;
+}
+
+.form-section{
+    padding-block: 21px;
+    padding-inline: 34px;
+    border-radius: 15px;
+    border-style: solid;
+    border-color: #05244f;
+    border-width: 1px;
+    
+    position: relative;
+}

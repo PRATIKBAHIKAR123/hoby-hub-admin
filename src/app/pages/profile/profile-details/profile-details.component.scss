@@ -1,0 +1,96 @@
+.profile-container {
+    max-width: 80%;
+    margin: auto;
+    text-align: center;
+    padding: 20px;
+    h2 {
+        color: #636363;
+        text-align: center;
+        font-size: 24.47px;
+        font-weight: 600;
+    }
+  }
+
+  hr{
+    background: #f5f5f5;
+    height: 3px;
+  }
+  
+  .profile-header {
+    margin-bottom: 20px;
+  }
+  
+  .profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  h2 {
+    margin-bottom: 10px;
+  }
+  
+  .role {
+    color: gray;
+  }
+  
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .detail-row {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .detail {
+    flex: 1;
+  }
+  
+  .profile-label {
+    color: #8e8e8e;
+    text-align: left;
+    font-family: "Inter-SemiBold", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    display: block;
+  }
+  
+  .profile-form-control {
+      width: 100%;
+      padding: 12px;
+      background: #ebebed;
+      border-radius: 6px;
+      border-style: solid;
+      border-color: #e4e6ea;
+      border-width: 1px;
+  }
+  
+  .profile-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .btn-close {
+    background: #fff;
+    border: 1px solid #333;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .btn-edit {
+    background: #0056b3;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  

@@ -1,0 +1,55 @@
+<div class="page" id="programs">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Programs Registered</h4>
+      
+                <div class="page-title-right">
+                    <button [routerLink]="'/add-program'" type="button" class="btn btn-primary waves-effect waves-light"><span><i class=" ri-add-fill"></i>Add program</span></button>
+                </div>
+      
+            </div>
+        </div>
+      </div>
+      <div class="table-responsive grey_labels_table">
+        <table class="table align-middle table-nowrap mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">HHID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Approved date</th>
+                    <th scope="col">Expiry Date</th>
+                    <th scope="col">Last renewal date</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let i of tableData">
+                    <th >{{ i.id }}</th>
+                    <td class="d-flex gap-2"><img src="{{ i.img }}" width="48" height="48"/><div>
+                        <div>{{ i.title }}</div>
+                        <div>{{ i.location }}</div>
+                    </div></td>
+                    <td><span class="badge bg-success">{{ i.status }}</span></td>  <!-- ✅ Matches 'status' -->
+                    <td>{{ i.approvedDate }}</td> <!-- ✅ Matches 'approvedDate' -->
+                    <td>{{ i.expiryDate }}</td>
+                    <td>{{ i.lastRenewalDate }}</td>
+                    <td class="d-flex gap-2 align-items-center">
+                        <img src="assets/images/icons/Edit Square.png" width="16" height="16"/>
+                        <img src="assets/images/icons/Delete 2.png" width="16" height="16"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col col-sm-12">
+        <div class="text-sm-right  listjs-pagination">
+            <ngb-pagination [collectionSize]="30" 
+                [pageSize]="10">
+                <ng-template ngbPaginationPrevious><img src="assets/images/icons/Down 4.png" height="24" width="24" /> Back</ng-template>
+	<ng-template ngbPaginationNext>Next <img src="assets/images/icons/Down 5.png" height="24" width="24" /></ng-template>
+            </ngb-pagination>
+        </div>
+    </div>
+    </div>

@@ -1,0 +1,118 @@
+<div>
+    <div class="form-title">
+        Account Holder Information
+
+    </div>
+    <div class="form-section">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput" class="form-label">Mobile Number</label>
+                    <input type="text" class="form-control" id="placeholderInput" placeholder="Mobile Number">
+
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput1" class="form-label">OTP</label>
+                    <input type="text" class="form-control" id="placeholderInput1" placeholder="OTP">
+
+                </div>
+            </div>
+            <div class="text-start mb-3">
+                <button type="button" class="btn btn-primary waves-effect waves-light ml-2"><span>Submit
+                        OTP</span></button>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput1" class="form-label">Email Address</label>
+                    <input type="text" class="form-control" id="placeholderInput1" placeholder="Email Address">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4 mb-3">
+                <div>
+
+                    <label for="placeholderInput" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="placeholderInput" placeholder="First Name">
+
+                </div>
+            </div>
+            <div class="col-4 mb-3">
+                <div>
+
+                    <label for="placeholderInput1" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="placeholderInput1" placeholder="Last name">
+
+                </div>
+            </div>
+            <div class="col-4 mb-3">
+                <div>
+
+                    <label for="placeholderInput1" class="form-label">Gender</label>
+                    <input type="text" class="form-control" id="placeholderInput1" placeholder="Gender">
+
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput" class="form-label">Progress Level</label>
+                    <input type="text" class="form-control" id="placeholderInput" placeholder="Progress Level">
+
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput1" class="form-label">Age/Date of Birth</label>
+                    <input type="text" class="form-control" id="placeholderInput1" placeholder="Age/Date of Birth">
+
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput1" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="placeholderInput1" placeholder="Address">
+
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <label for="placeholderInput" class="form-label">Supporting Documents/Files</label>
+                <app-file-upload [acceptedFormats]="'.jpg,.png,.pdf,.zip'"
+                    (fileSelected)="handleFile($event)"></app-file-upload>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput1" class="form-label">Program</label>
+                    <input type="text" class="form-control" id="placeholderInput1" placeholder="Program">
+
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div>
+
+                    <label for="placeholderInput" class="form-label">Progress Level</label>
+                    <input type="text" class="form-control" id="placeholderInput" placeholder="Progress Level">
+
+                </div>
+            </div>
+            <div class="text-start mt-2">
+                <button type="button" class="btn btn-primary waves-effect waves-light ml-2"><span><i class=" ri-add-fill"></i>Add Student</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-end mt-2 gap-2">
+    <button type="button" class="btn btn-ghost-primary waves-effect waves-light material-shadow-none">Cancel</button>
+    <button type="button" class="btn btn-primary waves-effect waves-light ml-2"><span>Add Student</span></button>
+</div>

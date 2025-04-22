@@ -1,0 +1,8 @@
+<div class="upload-container" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
+    <img src="assets/images/icons/file-upload.png" alt="Upload Icon" height="45" width="59">
+    <p>Drag your file(s) to start uploading</p>
+    <p>OR</p>
+    <input type="file" [accept]="acceptedFormats" (change)="onFileChange($event)" hidden #fileInput>
+    <button (click)="fileInput.click()">Browse File</button>
+  </div>
+  <p class="file-support">Only support {{ acceptedFormats }}</p>

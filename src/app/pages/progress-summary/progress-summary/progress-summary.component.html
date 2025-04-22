@@ -1,0 +1,66 @@
+<div class="page" id="programs">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">PROGRESS SUMMARY</h4>
+
+                <div class="page-title-right">
+                    <button [routerLink]="'/add-program'" type="button"
+                        class="btn btn-primary waves-effect waves-light">
+                        <span><i class=" ri-add-fill"></i>Add</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive  black_labels_table">
+        <table class="table align-middle  mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">Learner ID</th>
+                    <th scope="col">Learner Name</th>
+                    <th scope="col">Program</th>
+                    <th scope="col">Class Name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Activity</th>
+                    <th scope="col">System Time</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let i of tableData">
+                    <th>{{ i.learnerId }}</th>
+                    <td>{{ i.learnerName }}</td>
+                    <td class="d-flex gap-2">
+                        <div>
+                            <div>{{ i.program }}</div>
+                            <div>{{ i.location }}</div>
+                        </div>
+                    </td>
+                    <td>{{ i.className }}</td>
+                    <td>{{ i.date }}</td>
+                    <td>{{ i.activity }}</td>
+                    <td>{{ i.systemTime }}</td>
+                    <td class="d-flex gap-2 align-items-center">
+                        <img src="assets/images/icons/Edit Square.png" width="16" height="16" />
+                        <img src="assets/images/icons/Delete 2.png" width="16" height="16" />
+                        <img src="assets/images/icons/Option-three dots.svg" width="16" height="10" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col col-sm-12">
+        <div class="text-sm-right listjs-pagination">
+            <ngb-pagination [collectionSize]="30" [pageSize]="10">
+                <ng-template ngbPaginationPrevious>
+                    <img src="assets/images/icons/Down 4.png" height="24" width="24" /> Back
+                </ng-template>
+                <ng-template ngbPaginationNext>
+                    Next <img src="assets/images/icons/Down 5.png" height="24" width="24" />
+                </ng-template>
+            </ngb-pagination>
+        </div>
+    </div>
+</div>
