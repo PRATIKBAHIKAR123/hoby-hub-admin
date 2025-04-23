@@ -42,7 +42,8 @@
               "node_modules/slick-carousel/slick/slick-theme.scss",
               "src/assets/scss/config/interactive/bootstrap.scss",
               "src/assets/scss/config/interactive/app.scss",
-              "src/assets/scss/icons.scss"
+              "src/assets/scss/icons.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts":[
               "node_modules/jquery/dist/jquery.min.js",
