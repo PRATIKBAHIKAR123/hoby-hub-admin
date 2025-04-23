@@ -12,23 +12,24 @@ export class VerticalComponent implements OnInit {
 
   isCondensed = false;
 
-  constructor(private eventService: EventService, public router: Router, public activatedRoute: ActivatedRoute) { }
+  constructor(private eventService: EventService, private router: Router, private activatedRoute: ActivatedRoute) {
+  }
+
 
   ngOnInit(): void {
     if (document.documentElement.getAttribute('data-layout') == 'semibox') {
       document.documentElement.setAttribute('data-layout', 'semibox');
-      document.documentElement.setAttribute('data-layout-style', 'default');
     } else {
       document.documentElement.setAttribute('data-layout', LAYOUT);
-      document.documentElement.setAttribute('data-layout-style', SIDEBAR_VIEW);
-    } document.documentElement.setAttribute('data-topbar', TOPBAR);
+    }
+    document.documentElement.setAttribute('data-topbar', TOPBAR);
     document.documentElement.setAttribute('data-sidebar', SIDEBAR_COLOR);
     document.documentElement.setAttribute('data-sidebar-size', SIDEBAR_SIZE);
+    document.documentElement.setAttribute('data-layout-style', SIDEBAR_VIEW);
     document.documentElement.setAttribute('data-bs-theme', LAYOUT_MODE);
     document.documentElement.setAttribute('data-layout-width', LAYOUT_WIDTH);
     document.documentElement.setAttribute('data-layout-position', LAYOUT_POSITION);
     document.documentElement.setAttribute('data-preloader', DATA_PRELOADER);
-
 
     this.router.events.subscribe((event: any) => {
       if (document.documentElement.getAttribute('data-preloader') == 'enable') {
@@ -50,36 +51,36 @@ export class VerticalComponent implements OnInit {
     });
 
     this.handlePreloader(this.activatedRoute.snapshot.routeConfig?.path);
-    window.addEventListener('resize', function () {
-      if (document.documentElement.clientWidth <= 767) {
-        document.documentElement.setAttribute('data-sidebar-size', '');
-        document.querySelector('.hamburger-icon')?.classList.add('open')
-      }
-      else if (document.documentElement.clientWidth <= 1024) {
-        document.documentElement.setAttribute('data-sidebar-size', 'sm');
-        document.querySelector('.hamburger-icon')?.classList.add('open')
-      }
-      else if (document.documentElement.clientWidth >= 1024) {
-        document.documentElement.setAttribute('data-sidebar-size', 'lg');
-        document.querySelector('.hamburger-icon')?.classList.remove('open')
-      }
-    })
-
-  }
-  private handlePreloader(route: any) {
-    if (route !== '/disabled-route') {
-      (document.getElementById("preloader") as HTMLElement).style.opacity = "1";
-      (document.getElementById("preloader") as HTMLElement).style.visibility = "";
-      setTimeout(() => {
-        (document.getElementById("preloader") as HTMLElement).style.opacity = "0";
-        (document.getElementById("preloader") as HTMLElement).style.visibility = "hidden";
-      }, 1000);
-    } else {
-      (document.getElementById("preloader") as HTMLElement).style.opacity = "0";
-      (document.getElementById("preloader") as HTMLElement).style.visibility = "hidden";
+    if (document.documentElement.getAttribute('data-sidebar-size') == 'lg') {
+      window.addEventListener('resize', function () {
+        if (document.documentElement.clientWidth <= 767) {
+          document.documentElement.setAttribute('data-sidebar-size', '');
+          document.querySelector('.hamburger-icon')?.classList.add('open')
+        }
+        else if (document.documentElement.clientWidth <= 1024) {
+          document.documentElement.setAttribute('data-sidebar-size', 'sm');
+          document.querySelector('.hamburger-icon')?.classList.add('open')
+        }
+        else if (document.documentElement.clientWidth >= 1024) {
+          document.documentElement.setAttribute('data-sidebar-size', 'lg');
+          document.querySelector('.hamburger-icon')?.classList.remove('open')
+        }
+      })
     }
   }
-
+  private handlePreloader(route: any) {
+    // if (route !== '/disabled-route') {
+    //   (document.getElementById("preloader") as HTMLElement).style.opacity = "1";
+    //   (document.getElementById("preloader") as HTMLElement).style.visibility = "";
+    //   setTimeout(() => {
+    //     (document.getElementById("preloader") as HTMLElement).style.opacity = "0";
+    //     (document.getElementById("preloader") as HTMLElement).style.visibility = "hidden";
+    //   }, 1000);
+    // } else {
+    //   (document.getElementById("preloader") as HTMLElement).style.opacity = "0";
+    //   (document.getElementById("preloader") as HTMLElement).style.visibility = "hidden";
+    // }
+  }
 
 
   /**
@@ -97,22 +98,11 @@ export class VerticalComponent implements OnInit {
         (document.documentElement.getAttribute('data-sidebar-size') == "sm") ? document.documentElement.setAttribute('data-sidebar-size', 'lg') : document.documentElement.setAttribute('data-sidebar-size', 'sm')
       }
     }
+    // if (document.documentElement.clientWidth <= 767) {
     if (document.documentElement.clientWidth <= 767) {
       document.body.classList.toggle('vertical-sidebar-enable');
     }
     this.isCondensed = !this.isCondensed;
-  }
-
-  onResize(event: any) {
-    if (document.body.getAttribute('layout') == "twocolumn") {
-      if (event.target.innerWidth <= 767) {
-        this.eventService.broadcast('changeLayout', 'vertical');
-      } else {
-        this.eventService.broadcast('changeLayout', 'twocolumn');
-        document.body.classList.remove('twocolumn-panel');
-        document.body.classList.remove('vertical-sidebar-enable');
-      }
-    }
   }
 
   /**
@@ -125,6 +115,18 @@ export class VerticalComponent implements OnInit {
       rightBar.classList.toggle('show');
       rightBar.setAttribute('style', "visibility: visible;");
 
+    }
+  }
+
+  onResize(event: any) {
+    if (document.body.getAttribute('layout') == "twocolumn") {
+      if (event.target.innerWidth <= 767) {
+        this.eventService.broadcast('changeLayout', 'vertical');
+      } else {
+        this.eventService.broadcast('changeLayout', 'twocolumn');
+        document.body.classList.remove('twocolumn-panel');
+        document.body.classList.remove('vertical-sidebar-enable');
+      }
     }
   }
 

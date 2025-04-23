@@ -40,14 +40,10 @@
                               <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
                                   <div class="mb-3">
-                                    <label class="form-label" for="username">Email</label>
-                                    <input type="email" class="form-control" id="email" formControlName="email"
-                                    [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
-                                    placeholder="Enter email">
-                                    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                                        <div *ngIf="f['email'].errors['required']">Email is required</div>
-                                        <div *ngIf="f['email'].errors['email']">Email must be a valid email address
-                                        </div>
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter username" formControlName="username">
+                                    <div *ngIf="submitted && f['username'].errors" class="invalid-feedback d-block">
+                                        <div *ngIf="f['username'].errors['required']">Username is required</div>
                                     </div>
                                   </div>
 
@@ -57,23 +53,30 @@
                                       </div>
                                       <label class="form-label" for="password-input">Password</label>
                                       <div class="position-relative auth-pass-inputgroup mb-3">
-                                          <input [type]="fieldTextType ? 'text' : 'password'" class="form-control pe-5" placeholder="Enter password" id="password-input" formControlName="password"
-                                          [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
-                                          <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" id="password-addon"><i class="mdi align-middle" [ngClass]="{'mdi-eye-off-outline': !fieldTextType, 'mdi-eye-outline': fieldTextType
-                                          }" (click)="toggleFieldTextType()"></i></button>
-                                          <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
-                                            <span *ngIf="f['password'].errors['required']">Password is required</span>
-                                          </div>
+                                          <input [type]="fieldTextType ? 'text' : 'password'" class="form-control pe-5" placeholder="Enter password" id="password-input" formControlName="password">
+                                          <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" id="password-addon" (click)="toggleFieldTextType()">
+                                              <i class="ri-eye-fill align-middle"></i>
+                                          </button>
+                                      </div>
+                                      <div *ngIf="submitted && f['password'].errors" class="invalid-feedback d-block">
+                                          <div *ngIf="f['password'].errors['required']">Password is required</div>
                                       </div>
                                   </div>
 
                                   <div class="form-check">
-                                      <input class="form-check-input" type="checkbox" value="" id="auth-remember-check">
+                                      <input class="form-check-input" type="checkbox" id="auth-remember-check">
                                       <label class="form-check-label" for="auth-remember-check">Remember me</label>
                                   </div>
 
                                   <div class="mt-4">
-                                      <button class="btn btn-success w-100" type="submit">Sign In</button>
+                                      <button class="btn btn-success w-100" type="submit" [disabled]="loading">
+                                          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                                          Sign In
+                                      </button>
+                                  </div>
+
+                                  <div *ngIf="error" class="alert alert-danger mt-3">
+                                      {{ error }}
                                   </div>
 
                                   <div class="mt-4 text-center">
@@ -120,5 +123,4 @@
   </footer>
   <!-- end Footer -->
 </div>
-<!-- end auth-page-wrapper -->
-<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+

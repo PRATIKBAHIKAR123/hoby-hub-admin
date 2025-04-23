@@ -2,33 +2,37 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VendorsComponent } from './vendors/vendors.component';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule, Routes } from '@angular/router';
 import { AddVendorComponent } from './vendors/add-vendor/add-vendor.component';
-
+import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
 
 const routes: Routes = [
-
   {
     path: "",
     component: VendorsComponent
   },
-   {
+  {
     path: "add-vendor",
     component: AddVendorComponent
   },
-
+  {
+    path: ":id",
+    component: VendorDetailsComponent
+  }
 ];
 
 @NgModule({
   declarations: [
     VendorsComponent,
-    AddVendorComponent
+    AddVendorComponent,
+    VendorDetailsComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
     NgbPaginationModule,
+    NgbModalModule,
     RouterModule.forChild(routes)
   ]
 })

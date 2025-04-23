@@ -1,15 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Inject, ViewChild, TemplateRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { EventService } from '../../core/services/event.service';
-
-//Logout
-import { environment } from '../../../environments/environment';
-import { AuthenticationService } from '../../core/services/auth.service';
-import { AuthfakeauthenticationService } from '../../core/services/authfake.service';
-import { Router } from '@angular/router';
-import { TokenStorageService } from '../../core/services/token-storage.service';
-
-// Language
 import { CookieService } from 'ngx-cookie-service';
 import { LanguageService } from '../../core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,6 +8,7 @@ import { allNotification, messages } from './data'
 import { CartModel } from './topbar.model';
 import { cartData } from './data';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-topbar',
@@ -33,7 +25,7 @@ export class TopbarComponent implements OnInit {
   valueset: any;
   countryName: any;
   cookieValue: any;
-  userData: any;
+  userData: any = {};
   cartData!: CartModel[];
   total = 0;
   cart_length: any = 0;
@@ -45,11 +37,12 @@ export class TopbarComponent implements OnInit {
   notifyId: any;
 
   constructor(@Inject(DOCUMENT) private document: any, private eventService: EventService, public languageService: LanguageService, private modalService: NgbModal,
-    public _cookiesService: CookieService, public translate: TranslateService, private authService: AuthenticationService, private authFackservice: AuthfakeauthenticationService,
-    private router: Router, private TokenStorageService: TokenStorageService) { }
+    private authService: AuthenticationService,
+    public _cookiesService: CookieService, public translate: TranslateService,
+  ) { }
 
   ngOnInit(): void {
-    this.userData = this.TokenStorageService.getUser();
+    //this.userData = this.commonService.getUserData();
     this.element = document.documentElement;
 
     // Cookies wise Language set
@@ -176,17 +169,16 @@ export class TopbarComponent implements OnInit {
    */
   logout() {
     this.authService.logout();
-    this.router.navigate(['/auth/login']);
   }
 
   windowScroll() {
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-      (document.getElementById("back-to-top") as HTMLElement).style.display = "block";
-      document.getElementById('page-topbar')?.classList.add('topbar-shadow');
-    } else {
-      (document.getElementById("back-to-top") as HTMLElement).style.display = "none";
-      document.getElementById('page-topbar')?.classList.remove('topbar-shadow');
-    }
+    // if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    //   (document.getElementById("back-to-top") as HTMLElement).style.display = "block";
+    //   document.getElementById('page-topbar')?.classList.add('topbar-shadow');
+    // } else {
+    //   (document.getElementById("back-to-top") as HTMLElement).style.display = "none";
+    //   document.getElementById('page-topbar')?.classList.remove('topbar-shadow');
+    // }
   }
 
   // Delete Item
@@ -211,7 +203,7 @@ export class TopbarComponent implements OnInit {
   Search() {
     var searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
     var dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
-    var input: any, filter: any, ul: any, li: any, a: any | undefined, i: any, txtValue: any;
+    var input: any, filter: any;
     input = document.getElementById("search-options") as HTMLAreaElement;
     filter = input.value.toUpperCase();
     var inputLength = filter.length;
@@ -259,7 +251,7 @@ export class TopbarComponent implements OnInit {
 
   // Remove Notification
   checkedValGet: any[] = [];
-  onCheckboxChange(event: any, id: any) {
+  onCheckboxChange(id: any) {
     this.notifyId = id
     var result;
     if (id == '1') {
@@ -316,4 +308,6 @@ export class TopbarComponent implements OnInit {
       document.querySelector('.empty-notification-elem')?.classList.remove('d-none')
     }
   }
+
+
 }

@@ -20,6 +20,8 @@ import { JwtInterceptor } from './core/helpers/jwt.interceptor';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
+import { httpInterceptor } from './core/helpers/http.interceptor';
 
 export function createTranslateLoader(http: HttpClient): any {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -50,12 +52,18 @@ if (environment.defaultauth === 'firebase') {
     AppRoutingModule,
     LayoutsModule,
     PagesModule,
-    NgbModule
+    NgbModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      preventDuplicates: true,
+      progressBar: true
+    }),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: FakeBackendInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: httpInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

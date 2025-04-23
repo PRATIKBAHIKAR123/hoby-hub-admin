@@ -25,18 +25,27 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let i of tableData">
-                    <th >{{ i.id }}</th>
-                    <td class="d-flex gap-2"><div>
-                        <div>{{ i.title }}</div>
-                        <div>{{ i.location }}</div>
-                    </div></td>
-                    <td><span class="badge bg-success">{{ i.status }}</span></td>  <!-- ✅ Matches 'status' -->
-                    <td>{{ i.approvedDate }}</td> <!-- ✅ Matches 'approvedDate' -->
-                    <td>{{ i.expiryDate }}</td>
-                    <td>{{ i.lastRenewalDate }}</td>
+                <tr *ngIf="isLoading">
+                    <td colspan="7" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngFor="let vendor of paginatedVendors">
+                    <th>{{ vendor.id }}</th>
+                    <td class="d-flex gap-2">
+                        <div>
+                            <div>{{ vendor.name }}</div>
+                            <div>{{ vendor.phoneNumber }}</div>
+                        </div>
+                    </td>
+                    <td><span class="badge bg-success">Active</span></td>
+                    <td>{{ vendor.createdDate | date:'shortDate' }}</td>
+                    <td>-</td>
+                    <td>-</td>
                     <td class="d-flex gap-2 align-items-center">
-                        <img src="assets/images/icons/Edit Square.png" width="16" height="16"/>
+                        <img src="assets/images/icons/Edit Square.png" width="16" height="16" (click)="navigateToVendorDetails(vendor.id)" style="cursor: pointer;"/>
                         <img src="assets/images/icons/Delete 2.png" width="16" height="16"/>
                     </td>
                 </tr>
@@ -44,11 +53,17 @@
         </table>
     </div>
     <div class="col col-sm-12">
-        <div class="text-sm-right  listjs-pagination">
-            <ngb-pagination [collectionSize]="30" 
-                [pageSize]="10">
+        <div class="text-sm-right listjs-pagination">
+            <ngb-pagination 
+                [collectionSize]="totalItems" 
+                [pageSize]="itemsPerPage"
+                [(page)]="currentPage"
+                (pageChange)="onPageChange($event)"
+                [maxSize]="5"
+                [rotate]="true"
+                [boundaryLinks]="true">
                 <ng-template ngbPaginationPrevious><img src="assets/images/icons/Down 4.png" height="24" width="24" /> Back</ng-template>
-	<ng-template ngbPaginationNext>Next <img src="assets/images/icons/Down 5.png" height="24" width="24" /></ng-template>
+                <ng-template ngbPaginationNext>Next <img src="assets/images/icons/Down 5.png" height="24" width="24" /></ng-template>
             </ngb-pagination>
         </div>
     </div>

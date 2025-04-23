@@ -1,0 +1,133 @@
+<div class="page" id="vendor-details">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Vendor Details</h4>
+                <div class="page-title-right">
+                    <button [routerLink]="'/vendors'" type="button" class="btn btn-secondary waves-effect waves-light">
+                        <i class="ri-arrow-left-line"></i> Back to List
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Details Section -->
+    <div class="row mt-4" *ngIf="!isLoading">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Basic Information</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Vendor ID</label>
+                                <p class="form-control-static">{{ vendor?.id }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <p class="form-control-static">{{ vendor?.name }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <p class="form-control-static">{{ vendor?.phoneNumber }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <p class="form-control-static">{{ vendor?.email || 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Registration Date</label>
+                                <p class="form-control-static">{{ vendor?.createdDate | date:'mediumDate' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activities Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Activities</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Created Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="6" class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let activity of activities">
+                                    <th>{{ activity.id }}</th>
+                                    <td>{{ activity.title }}</td>
+                                    <td>{{ activity.description }}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="{
+                                            'bg-success': activity.status === 'Approved',
+                                            'bg-warning': activity.status === 'Pending',
+                                            'bg-danger': activity.status === 'Rejected'
+                                        }">
+                                            {{ activity.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ activity.createdDate | date:'mediumDate' }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success"
+                                            (click)="openApproveModal(approveModal, activity)">
+                                            Approve
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Approve Modal -->
+<ng-template #approveModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Approve Activity</h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to approve this activity?</p>
+        <div class="mb-3">
+            <strong>Title:</strong> {{ selectedActivity?.title }}
+        </div>
+        <div class="mb-3">
+            <strong>Description:</strong> {{ selectedActivity?.description }}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="approveActivity()">Approve</button>
+    </div>
+</ng-template>
