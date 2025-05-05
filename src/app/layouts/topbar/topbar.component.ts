@@ -35,11 +35,14 @@ export class TopbarComponent implements OnInit {
   isDropdownOpen = false;
   @ViewChild('removenotification') removenotification !: TemplateRef<any>;
   notifyId: any;
+  userInfo: any;
 
   constructor(@Inject(DOCUMENT) private document: any, private eventService: EventService, public languageService: LanguageService, private modalService: NgbModal,
     private authService: AuthenticationService,
     public _cookiesService: CookieService, public translate: TranslateService,
-  ) { }
+  ) { 
+    this.userInfo = this.authService.getTokenInfo();
+  }
 
   ngOnInit(): void {
     //this.userData = this.commonService.getUserData();
