@@ -9,6 +9,33 @@ interface Vendor {
   email: string | null;
   phoneNumber: string;
   createdDate: string;
+  // New fields for redesigned UI
+  title?: string;
+  subtitle?: string;
+  sinceYear?: string;
+  description?: string;
+  profileImageUrl?: string;
+  galleryImages?: string[];
+  ageRestriction?: string;
+  session?: string;
+  rate?: string;
+  language?: string;
+  classes?: {
+    type: string;
+    weekDay: string;
+    time: string;
+    age: string;
+    session: string;
+    gender: string;
+    price: string;
+  }[];
+  institute?: string;
+  hhId?: string;
+  intro?: string;
+  website?: string;
+  whatsapp?: string;
+  address?: string;
+  addressUrl?: string;
 }
 
 @Component({

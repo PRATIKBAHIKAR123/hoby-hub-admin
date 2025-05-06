@@ -1,115 +1,157 @@
-<div class="page" id="vendor-details">
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Vendor Details</h4>
-                <div class="page-title-right">
-                    <button [routerLink]="'/vendors'" type="button" class="btn btn-secondary waves-effect waves-light">
-                        <i class="ri-arrow-left-line"></i> Back to List
-                    </button>
-                </div>
+<!-- Redesigned Vendor Details Page -->
+<div class="container-fluid py-3" id="vendor-details">
+    <!-- Header Section -->
+    <div class="row align-items-center mb-3">
+        <div class="col-md-8">
+            <div class="fw-bold fs-4 mb-2">Edit / Approve / Reject / Delete the following Ad :</div>
+            <div class="d-flex gap-2 mb-2">
+                <button class="btn btn-primary">Edit</button>
+                <button class="btn btn-success">Approve</button>
+                <button class="btn btn-warning">Reject</button>
+                <button class="btn btn-danger">Delete</button>
             </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="small">Posted Date and Time : {{ vendor?.createdDate | date:'dd-MM-yyyy HH:mm' }}</div>
         </div>
     </div>
 
-    <!-- Vendor Details Section -->
-    <div class="row mt-4" *ngIf="!isLoading">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title mb-4">Basic Information</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Vendor ID</label>
-                                <p class="form-control-static">{{ vendor?.id }}</p>
-                            </div>
+    <!-- Main Content Section -->
+    <div class="row g-4">
+        <!-- Left Main Details -->
+        <div class="col-lg-8">
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body p-4">
+                    <!-- Title Card -->
+                    <div class="card mb-3 bg-light border-0">
+                        <div class="card-body p-3">
+                            <div class="fw-bold fs-5">{{ vendor?.title || "Pinky Walia's German Language classes in Pune" }}</div>
+                            <div class="text-muted small">Since {{ vendor?.sinceYear || '2020' }}</div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Name</label>
-                                <p class="form-control-static">{{ vendor?.name }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Phone Number</label>
-                                <p class="form-control-static">{{ vendor?.phoneNumber }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <p class="form-control-static">{{ vendor?.email || 'N/A' }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Registration Date</label>
-                                <p class="form-control-static">{{ vendor?.createdDate | date:'mediumDate' }}</p>
-                            </div>
-                        </div>
+                    </div>
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <div>{{ vendor?.description || `Unlock your potential with Pinky Walia's German Language Classes! Ideal for professionals, students, or hobbyists, our classes focus on interactive learning—grammar made simple, cultural insights, and activities for real-world application. One can learn this language as a hobby too. Learning will be based on more classroom activities like interaction, hearing, visual and reading practice. Learn at your own pace! Enquire us today for online classes.` }}</div>
+                    </div>
+                    <!-- Main Image and Badge -->
+                    <div class="mb-3 position-relative text-censster">
+                        <img [src]="vendor?.profileImageUrl || 'https://via.placeholder.com/350'" class="img-fluid rounded" style="max-width: 350px; border: 6px solid #fff; box-shadow: 0 0 10px #ccc;" alt="Main Vendor Image">
+                        <img src="assets/badge.png" alt="Badge" class="position-absolute top-0 start-50 translate-middle-x" style="width: 120px; margin-top: -30px;">
+                    </div>
+                    <!-- Profile Name and Subtitle -->
+                    <div class="text-center mb-2">
+                        <div class="fw-bold fs-6">{{ vendor?.name }}</div>
+                        <div class="text-muted small">{{ vendor?.subtitle || 'Vendor Subtitle' }}</div>
+                    </div>
+                    <!-- Gallery Images -->
+                    <div class="d-flex justify-content-center gap-2 mb-3">
+                        <img src="assets/images/language1.jpg" alt="Language 1" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                        <img src="assets/images/language2.jpg" alt="Language 2" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                        <img src="assets/images/language3.jpg" alt="Language 3" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                        <img src="assets/images/language4.jpg" alt="Language 4" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
                     </div>
                 </div>
             </div>
+            <!-- About Hobby Class -->
+            <div class="bg-light p-3 rounded mb-3">
+                <h6 class="mb-2">About Hobby Class</h6>
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <strong>Age Restriction</strong><br>
+                        <span>{{ vendor?.ageRestriction || '4 - 60 years' }}</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <strong>Session</strong><br>
+                        <span>{{ vendor?.session || 'Session 96' }}</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <strong>Rate</strong><br>
+                        <span>{{ vendor?.rate || 'INR 16,000+' }}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Class Details -->
+            <div class="bg-light p-3 rounded mb-3">
+                <h6 class="mb-2">Class Details : <span class="fw-normal">Language</span> <i class="bi bi-translate"></i></h6>
+                <span class="badge bg-secondary mb-2">{{ vendor?.language || 'German' }}</span>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Type</th>
+                                <th>Week Day</th>
+                                <th>Time</th>
+                                <th>Age</th>
+                                <th>Session</th>
+                                <th>Gender</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let class of vendor?.classes">
+                                <td>{{ class.type }}</td>
+                                <td>{{ class.weekDay }}</td>
+                                <td>{{ class.time }}</td>
+                                <td>{{ class.age }}</td>
+                                <td>{{ class.session }}</td>
+                                <td>{{ class.gender }}</td>
+                                <td>{{ class.price }}</td>
+                            </tr>
+                            <!-- Placeholder row if no data -->
+                            <tr *ngIf="!vendor?.classes">
+                                <td>Online</td>
+                                <td>Mo, Tu, We, Th, Fr</td>
+                                <td>10:00 - 22:30</td>
+                                <td>4 - 60</td>
+                                <td>96</td>
+                                <td>Male, Female</td>
+                                <td>16,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-2">
+                <strong>Disclaimer :</strong> <span>This is just a representation of few classes offered. Contact tutor for more info.</span>
+            </div>
         </div>
-    </div>
-
-    <!-- Activities Section -->
-    <div class="row mt-4">
-        <div class="col-12">
+        <!-- Right Contact Info & Map -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img [src]="vendor?.profileImageUrl || 'https://via.placeholder.com/60'" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="Profile">
+                        <div>
+                            <div class="fw-bold">Contact Information</div>
+                            <span class="text-muted small"><i class="bi bi-eye"></i></span>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-1"><strong>Institute:</strong> {{ vendor?.institute || "Pinky Walia's German Language Classes" }}</li>
+                        <li class="mb-1"><strong>HH ID:</strong> {{ vendor?.hhId || 'HH1427' }}</li>
+                        <li class="mb-1"><strong>Contact:</strong> {{ vendor?.name || 'Pinky Walia' }}</li>
+                        <li class="mb-1"><strong>Intro:</strong> <span class="d-block">{{ vendor?.intro || `Pinky Walia offers expert German language classes for professionals, students, and hobbyists. With an MA in German from Pune University, she combines interactive teaching with cultural insights to make learning engaging, effective, and enjoyable.` }}</span></li>
+                        <li class="mb-1"><strong>Website:</strong> <span>-</span></li>
+                        <li class="mb-1"><strong>Email:</strong> <a href="mailto:pinky.walia1@gmail.com">pinky.walia1@gmail.com</a></li>
+                        <li class="mb-1"><strong>Phone:</strong> <a href="tel:+919860603501">+91 9860603501</a></li>
+                        <li class="mb-1"><strong>Whatsapp:</strong> <a href="tel:+919860603501">+91 9860603501</a></li>
+                        <li class="mb-1"><strong>Address:</strong> <span class="d-block">5th Floor, 7/8 Manglawar peth, Param Heights, opp. FCML S G ELIGHT STUDIO, Somwar Peth, Pune - 411011, Maharashtra, India</span></li>
+                        <li class="mb-1"><a href="#">Get Direction</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Google Maps Section (with error handling) -->
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title mb-4">Activities</h5>
-                    <div class="table-responsive">
-                        <table class="table align-middle table-nowrap mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Created Date</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngIf="isLoading">
-                                    <td colspan="6" class="text-center">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr *ngFor="let activity of activities">
-                                    <th>{{ activity.id }}</th>
-                                    <td>{{ activity.title }}</td>
-                                    <td>{{ activity.description }}</td>
-                                    <td>
-                                        <span class="badge" [ngClass]="{
-                                            'bg-success': activity.status === 'Approved',
-                                            'bg-warning': activity.status === 'Pending',
-                                            'bg-danger': activity.status === 'Rejected'
-                                        }">
-                                            {{ activity.status }}
-                                        </span>
-                                    </td>
-                                    <td>{{ activity.createdDate | date:'mediumDate' }}</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-success"
-                                            (click)="openApproveModal(approveModal, activity)">
-                                            Approve
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="card-body p-0">
+                    <div style="height: 250px; width: 100%; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-muted">Oops! Something went wrong.<br>This page didn't load Google Maps correctly.</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- End of Redesigned Vendor Details Page -->
 
 <!-- Approve Modal -->
 <ng-template #approveModal let-modal>
