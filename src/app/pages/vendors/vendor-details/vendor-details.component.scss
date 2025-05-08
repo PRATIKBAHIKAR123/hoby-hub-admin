@@ -22,4 +22,45 @@
             font-weight: 600;
         }
     }
+
+    .class-details-table {
+        font-size: 0.875rem;
+        
+        th, td {
+            padding: 0.5rem;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        td {
+            color: #212529;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        .table-responsive {
+            margin: 0;
+            border: 0;
+        }
+    }
+}
+
+.modal-footer button,
+.btn,
+.btn-success {
+    cursor: pointer !important;
+}
+
+// Ensure modal is on top
+.modal {
+    z-index: 1050 !important;
 } 
