@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivityService } from 'src/app/services/activity.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrMessageService } from 'src/app/core/services/toastr-message.service';
+import { environment } from 'src/environments/environment';
 
 interface ClassDetail {
     title: string | null;
@@ -182,7 +183,7 @@ export class VendorDetailsComponent implements OnInit {
         }
         
         // If the URL is relative, prepend the API base URL
-        return `https://api.hobyhub.com${url.startsWith('/') ? '' : '/'}${url}`;
+        return `${environment.imageUrl}${url.startsWith('/') ? '' : '/'}${url}`;
     }
 
     openApproveModal(content: any, activity: Activity) {

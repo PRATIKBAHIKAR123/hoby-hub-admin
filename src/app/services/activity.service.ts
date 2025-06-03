@@ -43,7 +43,12 @@ export class ActivityService {
     });
   }
 
+  // getActivityById(id: number): Observable<any> {
+  //   return this.http.get(`${environment.apiUrl}/activity/get?id=${id}`);
+  // }
+
   getActivityById(id: number): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/activity/get?id=${id}`);
+    return this.http.get(`${environment.apiUrl}/admin/activity/get?id=${id}`);
   }
+
 } 
