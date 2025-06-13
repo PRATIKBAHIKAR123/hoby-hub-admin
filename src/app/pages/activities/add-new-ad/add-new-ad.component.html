@@ -1,0 +1,731 @@
+<div class="container-fluid p-4">
+  <h2 class="text-primary text-center mb-2">Registration Form</h2>
+  <p class="text-center text-muted mb-4">
+    Add details about your Institute with high-quality photos and class details
+    <span class="text-danger float-end">* Required Fields</span>
+  </p>
+
+  <div class="accordion" id="adDetailsAccordion">
+    <!-- Personal Details Section -->
+    <div class="accordion-item" [ngClass]="{'active': activeAccordion === 'item-0'}">
+      <h2 class="accordion-header" id="personalDetailsHeader">
+        <button class="accordion-button" type="button" (click)="onAccordionClick('item-0')"
+          [class.collapsed]="activeAccordion !== 'item-0'">
+          <div class="d-flex align-items-center" [ngClass]="{
+            'accordion-trigger-active': completedSections.personalDetails || activeAccordion === 'item-0',
+            'accordion-trigger-inactive': !completedSections.personalDetails && activeAccordion !== 'item-0'
+          }">
+            Profile Details
+            <i *ngIf="completedSections.personalDetails" class="ri-checkbox-circle-fill text-success ms-2"></i>
+          </div>
+        </button>
+      </h2>
+      <div id="personalDetailsCollapse" class="accordion-collapse collapse" [ngClass]="{'show': activeAccordion === 'item-0'}">
+        <div class="accordion-body">
+          <form [formGroup]="personalForm" (ngSubmit)="savePersonalDetails()">
+            <div class="row g-4">
+              <!-- First Name -->
+              <div class="col-md-6">
+                <label class="form-label">First Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="firstName" placeholder="First Name"
+                  [ngClass]="{'is-invalid': personalForm.get('firstName')?.touched && personalForm.get('firstName')?.errors}">
+                <div class="invalid-feedback" *ngIf="personalForm.get('firstName')?.touched && personalForm.get('firstName')?.errors">
+                  First name is required
+                </div>
+              </div>
+              <!-- Last Name -->
+              <div class="col-md-6">
+                <label class="form-label">Last Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name"
+                  [ngClass]="{'is-invalid': personalForm.get('lastName')?.touched && personalForm.get('lastName')?.errors}">
+                <div class="invalid-feedback" *ngIf="personalForm.get('lastName')?.touched && personalForm.get('lastName')?.errors">
+                  Last name is required
+                </div>
+              </div>
+              <!-- Mobile with Country Code Dropdown -->
+              <div class="col-md-6">
+                <label class="form-label">Mobile<span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <select class="form-select flex-shrink-0" style="max-width: 100px;" formControlName="countryCode">
+                    <option value="+91">+91</option>
+                    <option value="+98">+98</option>
+                  </select>
+                  <input type="tel" class="form-control" formControlName="phoneNumber" placeholder="Mobile Number"
+                    [ngClass]="{'is-invalid': personalForm.get('phoneNumber')?.touched && personalForm.get('phoneNumber')?.errors}">
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="personalForm.get('phoneNumber')?.touched && personalForm.get('phoneNumber')?.errors">
+                  <span *ngIf="personalForm.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+                  <span *ngIf="personalForm.get('phoneNumber')?.errors?.['invalidPhone']">Invalid phone number</span>
+                </div>
+              </div>
+              <!-- Email -->
+              <div class="col-md-6">
+                <label class="form-label">Email<span class="text-danger">*</span></label>
+                <input type="email" class="form-control" formControlName="emailId" placeholder="Email"
+                  [ngClass]="{'is-invalid': personalForm.get('emailId')?.touched && personalForm.get('emailId')?.errors}">
+                <div class="invalid-feedback" *ngIf="personalForm.get('emailId')?.touched && personalForm.get('emailId')?.errors">
+                  <span *ngIf="personalForm.get('emailId')?.errors?.['required']">Email is required</span>
+                  <span *ngIf="personalForm.get('emailId')?.errors?.['email']">Please enter a valid email</span>
+                </div>
+              </div>
+              <!-- Gender -->
+              <div class="col-md-6">
+                <label class="form-label">Gender<span class="text-danger">*</span></label>
+                <select class="form-select" formControlName="gender"
+                  [ngClass]="{'is-invalid': personalForm.get('gender')?.touched && personalForm.get('gender')?.errors}">
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Trans">Trans</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="personalForm.get('gender')?.touched && personalForm.get('gender')?.errors">
+                  Gender is required
+                </div>
+              </div>
+              <!-- Date of Birth -->
+              <div class="col-md-6">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" formControlName="dob"
+                  [ngClass]="{'is-invalid': personalForm.get('dob')?.touched && personalForm.get('dob')?.errors}">
+                <div class="invalid-feedback" *ngIf="personalForm.get('dob')?.touched && personalForm.get('dob')?.errors">
+                  Must be 16 years or older
+                </div>
+              </div>
+              <!-- Profile Image -->
+              <div class="col-12">
+  <label class="form-label">Profile Image</label>
+  <small class="text-muted d-block mb-2">Max 5MB. JPG, PNG only.</small>
+  <div *ngIf="!profileImagePreview">
+    <input type="file" accept="image/*" (change)="handleProfileImageUpload($event)" #profileImageInput>
+  </div>
+  <div *ngIf="profileImagePreview" class="mb-2 mt-2 position-relative d-inline-block">
+    <img [src]="profileImagePreview" alt="Profile Preview"
+         style="max-width:120px;max-height:120px; border-radius:8px;object-fit:cover;">
+    <button type="button"
+            class="btn btn-danger btn-sm position-absolute top-0 end-0"
+            style="transform: translate(40%,-40%);"
+            (click)="removeProfileImage()">
+      <i class="ri-close-line"></i>
+    </button>
+  </div>
+</div>
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+              <button type="submit" class="btn btn-primary px-5" [disabled]="isLoading">
+                <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+                {{ isLoading ? 'Saving...' : 'Save & Continue' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Institute Details Section -->
+    <div class="accordion-item" [ngClass]="{'active': activeAccordion === 'item-1'}">
+      <h2 class="accordion-header" id="instituteDetailsHeader">
+        <button class="accordion-button" type="button" (click)="onAccordionClick('item-1')"
+          [class.collapsed]="activeAccordion !== 'item-1'">
+          <div class="d-flex align-items-center" [ngClass]="{
+            'accordion-trigger-active': completedSections.instituteDetails || activeAccordion === 'item-1',
+            'accordion-trigger-inactive': !completedSections.instituteDetails && activeAccordion !== 'item-1'
+          }">
+            Institute Details
+            <i *ngIf="completedSections.instituteDetails" class="ri-checkbox-circle-fill text-success ms-2"></i>
+          </div>
+        </button>
+      </h2>
+      <div id="instituteDetailsCollapse" class="accordion-collapse collapse" [ngClass]="{'show': activeAccordion === 'item-1'}">
+        <div class="accordion-body">
+          <form [formGroup]="instituteForm" (ngSubmit)="saveInstituteDetails()">
+            <div class="row g-4">
+              <!-- Program Title -->
+              <div class="col-md-6">
+                <label class="form-label">Program Title<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="programTitle" placeholder="e.g. Music classes for 7-18 Age"
+                  [ngClass]="{'is-invalid': instituteForm.get('programTitle')?.touched && instituteForm.get('programTitle')?.errors}">
+                <div class="invalid-feedback" *ngIf="instituteForm.get('programTitle')?.touched && instituteForm.get('programTitle')?.errors">
+                  Program title is required
+                </div>
+                <small class="text-muted">Displayed on front page</small>
+              </div>
+              <!-- Institute Name -->
+              <div class="col-md-6">
+                <label class="form-label">Institute Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="instituteName" placeholder="Institute Name"
+                  [ngClass]="{'is-invalid': instituteForm.get('instituteName')?.touched && instituteForm.get('instituteName')?.errors}">
+                <div class="invalid-feedback" *ngIf="instituteForm.get('instituteName')?.touched && instituteForm.get('instituteName')?.errors">
+                  Institute name is required
+                </div>
+              </div>
+              <!-- Since Year -->
+              <div class="col-md-6">
+                <label class="form-label">Since</label>
+                <select class="form-select" formControlName="since">
+                  <option value="">Select Year</option>
+                  <option *ngFor="let year of yearsList" [value]="year">{{year}}</option>
+                </select>
+              </div>
+              <!-- GST Number -->
+              <div class="col-md-6">
+                <label class="form-label">GST Number</label>
+                <input type="text" class="form-control" formControlName="gstNo" placeholder="GST Number"
+                  [ngClass]="{'is-invalid': instituteForm.get('gstNo')?.touched && instituteForm.get('gstNo')?.errors}">
+                <div class="invalid-feedback" *ngIf="instituteForm.get('gstNo')?.touched && instituteForm.get('gstNo')?.errors">
+                  Invalid GST number format
+                </div>
+              </div>
+              <!-- Photos Upload -->
+              <div class="col-12">
+                <label class="form-label">Photos<span class="text-danger">*</span></label>
+                <div class="dropzone-container mb-2">
+                  <input #fileInput type="file" multiple (change)="handleImageUpload($event)" accept="image/*">
+                  <div class="image-grid mt-2" *ngIf="imageUrls.length">
+                    <div *ngFor="let url of imageUrls; let i = index" class="image-item d-inline-block me-2 mb-2">
+                      <img [src]="url" [alt]="'Image ' + (i + 1)" style="width:100px;height:100px;object-fit:cover;">
+                      <div>
+                        <button type="button" class="btn btn-danger btn-sm me-1" (click)="handleImageDelete(i)">
+                          <i class="ri-delete-bin-line"></i>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm"
+                          [class.active]="i === selectedThumbnailIndex"
+                          (click)="handleThumbnailSelect(i)">
+                          {{ i === selectedThumbnailIndex ? 'Thumbnail' : 'Set as Thumbnail' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <small class="text-muted d-block">Maximum 8 images. Size limit: 8MB each</small>
+                </div>
+              </div>
+              <!-- Introduction -->
+              <div class="col-12">
+                <label class="form-label">Introduction<span class="text-danger">*</span></label>
+                <textarea class="form-control" rows="5" formControlName="introduction" placeholder="Write about your institute..."
+                  [ngClass]="{'is-invalid': instituteForm.get('introduction')?.touched && instituteForm.get('introduction')?.errors}"></textarea>
+                <div class="invalid-feedback" *ngIf="instituteForm.get('introduction')?.touched && instituteForm.get('introduction')?.errors">
+                  <span *ngIf="instituteForm.get('introduction')?.errors?.['required']">Introduction is required</span>
+                  <span *ngIf="instituteForm.get('introduction')?.errors?.['minlength']">At least 50 characters</span>
+                </div>
+              </div>
+              <!-- Website -->
+              <div class="col-md-6">
+                <label class="form-label">Website</label>
+                <input type="url" class="form-control" formControlName="websiteName" placeholder="https://example.com"
+                  [ngClass]="{'is-invalid': instituteForm.get('websiteName')?.touched && instituteForm.get('websiteName')?.errors}">
+                <div class="invalid-feedback" *ngIf="instituteForm.get('websiteName')?.touched && instituteForm.get('websiteName')?.errors">
+                  Please enter a valid URL
+                </div>
+              </div>
+              <!-- Class Level -->
+              <div class="col-md-6">
+                <label class="form-label">Class Level</label>
+                <select class="form-select" formControlName="classLevel">
+                  <option value="">Select Class Level</option>
+                  <option value="Individual">Individual</option>
+                  <option value="Academy">Academy</option>
+                </select>
+              </div>
+              <!-- Instagram Account -->
+              <div class="col-md-6">
+                <label class="form-label">Instagram Account</label>
+                <input type="text" class="form-control" formControlName="instagramAccount" placeholder="Instagram Account">
+              </div>
+              <!-- YouTube Account -->
+              <div class="col-md-6">
+                <label class="form-label">YouTube Account</label>
+                <input type="text" class="form-control" formControlName="youtubeAccount" placeholder="YouTube Account">
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+              <button type="submit" class="btn btn-primary px-5" [disabled]="isLoading">
+                <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+                {{ isLoading ? 'Saving...' : 'Save & Continue' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Class/Course Button (always visible after Institute Details and below tables) -->
+    <div class="text-center my-3">
+      <button type="button" class="btn btn-primary" (click)="openAddDetailsModal()">
+        <i class="ri-add-line me-2"></i>Add Class/Course
+      </button>
+    </div>
+
+    <!-- Class Details Accordion: only show if form is open -->
+    <div *ngIf="showClassFields" class="accordion-item" [ngClass]="{'active': activeAccordion === 'item-2'}">
+      <h2 class="accordion-header" id="classDetailsHeader">
+        <button class="accordion-button" type="button" (click)="onAccordionClick('item-2')"
+          [class.collapsed]="activeAccordion !== 'item-2'">
+          <div class="d-flex align-items-center">
+            Class Details
+          </div>
+        </button>
+      </h2>
+      <div id="classDetailsCollapse" class="accordion-collapse collapse" [ngClass]="{'show': activeAccordion === 'item-2'}">
+        <div class="accordion-body">
+          <form [formGroup]="classForm" (ngSubmit)="saveClassDetails()">
+          <div class="row g-4">
+            <!-- Class Name -->
+            <div class="col-md-4">
+              <label class="form-label">Class Name<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="className" placeholder="Class Name"
+                [ngClass]="{'is-invalid': classForm.get('className')?.touched && classForm.get('className')?.errors}">
+              <div class="invalid-feedback" *ngIf="classForm.get('className')?.touched && classForm.get('className')?.errors">
+                Class name is required
+              </div>
+            </div>
+            <!-- Category -->
+            <div class="col-md-4">
+              <label class="form-label">Category<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="category" (change)="onClassCategoryChange()">
+                <option value="">Select Category</option>
+                <option *ngFor="let cat of categories" [value]="cat.id">{{cat.title}}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="classForm.get('category')?.touched && classForm.get('category')?.errors">
+                Category is required
+              </div>
+            </div>
+            <!-- Sub Category -->
+            <div class="col-md-4">
+              <label class="form-label">Sub Category<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="subCategory" [disabled]="!classForm.get('category')?.value">
+                <option value="">Select Sub Category</option>
+                <option *ngFor="let sub of classSubcategories" [value]="sub.id">{{sub.title}}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="classForm.get('subCategory')?.touched && classForm.get('subCategory')?.errors">
+                Sub Category is required
+              </div>
+            </div>
+            <!-- Timings -->
+            <div class="col-md-4">
+              <label class="form-label">Timings From<span class="text-danger">*</span></label>
+              <input type="time" class="form-control" formControlName="timingsFrom"
+                [ngClass]="{'is-invalid': classForm.get('timingsFrom')?.touched && classForm.get('timingsFrom')?.errors}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Timings To<span class="text-danger">*</span></label>
+              <input type="time" class="form-control" formControlName="timingsTo"
+                [ngClass]="{'is-invalid': classForm.get('timingsTo')?.touched && classForm.get('timingsTo')?.errors}">
+              <div class="invalid-feedback" *ngIf="classForm.get('timingsTo')?.touched && classForm.get('timingsTo')?.errors">
+                Invalid time range (The 'To' time must be after 'From')
+              </div>
+            </div>
+            <!-- Weekdays -->
+            <div class="col-md-4">
+              <label class="form-label">Weekdays<span class="text-danger">*</span></label>
+              <div class="d-flex flex-wrap gap-2">
+                <div *ngFor="let day of weekdays">
+                  <input type="checkbox" [id]="day" [checked]="classForm.get('weekdays')?.value?.includes(day)"
+                    (change)="handleWeekdayChange(day, true)">
+                  <label [for]="day" class="me-2 mr-2">{{day}}</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" *ngIf="classForm.get('weekdays')?.touched && classForm.get('weekdays')?.errors">
+                At least one weekday required
+              </div>
+            </div>
+            <!-- Age Range -->
+            <div class="col-md-2">
+              <label class="form-label">From Age</label>
+              <input type="number" class="form-control" formControlName="fromage" min="0" placeholder="From Age">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">To Age</label>
+              <input type="number" class="form-control" formControlName="toage" min="0" placeholder="To Age"
+                [ngClass]="{'is-invalid': classForm.hasError('ageRange') && classForm.get('toage')?.touched}">
+              <div class="invalid-feedback" *ngIf="classForm.hasError('ageRange') && classForm.get('toage')?.touched">
+                To Age must be greater than or equal to From Age
+              </div>
+            </div>
+            <!-- Cost Range -->
+            <div class="col-md-2">
+              <label class="form-label">From Cost</label>
+              <input type="number" class="form-control" formControlName="fromcost" min="0" placeholder="From Cost">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">To Cost</label>
+              <input type="number" class="form-control" formControlName="tocost" min="0" placeholder="To Cost"
+                [ngClass]="{'is-invalid': classForm.hasError('costRange') && classForm.get('tocost')?.touched}">
+              <div class="invalid-feedback" *ngIf="classForm.hasError('costRange') && classForm.get('tocost')?.touched">
+                To Cost must be greater than or equal to From Cost
+              </div>
+            </div>
+            <!-- Gender -->
+            <div class="col-md-2">
+              <label class="form-label">Gender</label>
+              <select class="form-select" formControlName="gender">
+                <option value="both">Both</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="Trans">Trans</option>
+              </select>
+            </div>
+            <!-- Experience Level -->
+            <div class="col-md-2">
+              <label class="form-label">Prior Knowledge</label>
+              <select class="form-select" formControlName="experienceLevel">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+            <!-- No. of Sessions -->
+            <div class="col-md-2">
+              <label class="form-label">No. of Sessions</label>
+              <input type="number" class="form-control" formControlName="noOfSessions" min="1" placeholder="No. of Sessions">
+            </div>
+            <!-- Type -->
+            <div class="col-md-2">
+              <label class="form-label">Type<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="type" (change)="onTypeChange()">
+                <option value="Online">Online</option>
+                <option value="Offline">In Person</option>
+              </select>
+            </div>
+            <!-- Location -->
+            <div class="col-md-4" >
+              <label class="form-label">Location<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="location">
+                <option value="">Select Location</option>
+                <option *ngFor="let loc of savedLocations" [ngValue]="loc">{{ getLocationFormatted(loc) }}</option>
+              </select>
+              <button type="button" class="btn btn-outline-primary btn-sm mt-1" (click)="openLocationPopup()">Add Location</button>
+            </div>
+            <!-- Contact -->
+            <div class="col-md-4">
+              <label class="form-label">Contact<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="contact">
+                <option value="">Select Contact</option>
+                <option *ngFor="let contact of savedContacts" [ngValue]="contact">{{ getContactFormatted(contact) }}</option>
+              </select>
+              <button type="button" class="btn btn-outline-primary btn-sm mt-1" (click)="openContactPopup()">Add Contact</button>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary px-5" [disabled]="isLoading">
+              <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+              {{ isLoading ? 'Saving...' : 'Save Class Details' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Details Accordion: only show if form is open -->
+  <div *ngIf="showCourseFields" class="accordion-item" [ngClass]="{'active': activeAccordion === 'item-3'}">
+    <h2 class="accordion-header" id="courseDetailsHeader">
+      <button class="accordion-button" type="button" (click)="onAccordionClick('item-3')"
+        [class.collapsed]="activeAccordion !== 'item-3'">
+        <div class="d-flex align-items-center">
+          Course Details
+        </div>
+      </button>
+    </h2>
+    <div id="courseDetailsCollapse" class="accordion-collapse collapse" [ngClass]="{'show': activeAccordion === 'item-3'}">
+      <div class="accordion-body">
+        <form [formGroup]="courseForm" (ngSubmit)="saveCourseDetails()">
+          <div class="row g-4">
+            <!-- Course Name -->
+            <div class="col-md-4">
+              <label class="form-label">Course Name<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="courseName" placeholder="Course Name"
+                [ngClass]="{'is-invalid': courseForm.get('courseName')?.touched && courseForm.get('courseName')?.errors}">
+              <div class="invalid-feedback" *ngIf="courseForm.get('courseName')?.touched && courseForm.get('courseName')?.errors">
+                Course name is required
+              </div>
+            </div>
+            <!-- Category -->
+            <div class="col-md-4">
+              <label class="form-label">Category<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="category" (change)="onCourseCategoryChange()">
+                <option value="">Select Category</option>
+                <option *ngFor="let cat of categories" [value]="cat.id">{{cat.title}}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="courseForm.get('category')?.touched && courseForm.get('category')?.errors">
+                Category is required
+              </div>
+            </div>
+            <!-- Sub Category -->
+            <div class="col-md-4">
+              <label class="form-label">Sub Category<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="subCategory" [disabled]="!courseForm.get('category')?.value">
+                <option value="">Select Sub Category</option>
+                <option *ngFor="let sub of courseSubcategories" [value]="sub.id">{{sub.title}}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="courseForm.get('subCategory')?.touched && courseForm.get('subCategory')?.errors">
+                Sub Category is required
+              </div>
+            </div>
+            <!-- Timings -->
+            <div class="col-md-4">
+              <label class="form-label">Timings From<span class="text-danger">*</span></label>
+              <input type="time" class="form-control" formControlName="timingsFrom"
+                [ngClass]="{'is-invalid': courseForm.get('timingsFrom')?.touched && courseForm.get('timingsFrom')?.errors}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Timings To<span class="text-danger">*</span></label>
+              <input type="time" class="form-control" formControlName="timingsTo"
+                [ngClass]="{'is-invalid': courseForm.get('timingsTo')?.touched && courseForm.get('timingsTo')?.errors}">
+              <div class="invalid-feedback" *ngIf="courseForm.get('timingsTo')?.touched && courseForm.get('timingsTo')?.errors">
+                Invalid time range
+              </div>
+            </div>
+            <!-- Weekdays -->
+            <div class="col-md-4">
+              <label class="form-label">Weekdays<span class="text-danger">*</span></label>
+              <div class="d-flex flex-wrap gap-2">
+                <div *ngFor="let day of weekdays">
+                  <input type="checkbox" [id]="'course-' + day" [checked]="courseForm.get('weekdays')?.value?.includes(day)"
+                    (change)="handleWeekdayChange(day, false)">
+                  <label [for]="'course-' + day" class="me-2">{{day}}</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" *ngIf="courseForm.get('weekdays')?.touched && courseForm.get('weekdays')?.errors">
+                At least one weekday required
+              </div>
+            </div>
+            <!-- Age Range -->
+            <div class="col-md-2">
+              <label class="form-label">From Age</label>
+              <input type="number" class="form-control" formControlName="fromage" min="0" placeholder="From Age">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">To Age</label>
+              <input type="number" class="form-control" formControlName="toage" min="0" placeholder="To Age"
+                [ngClass]="{'is-invalid': courseForm.hasError('ageRange') && courseForm.get('toage')?.touched}">
+              <div class="invalid-feedback" *ngIf="courseForm.hasError('ageRange') && courseForm.get('toage')?.touched">
+                To Age must be greater than or equal to From Age
+              </div>
+            </div>
+            <!-- Cost Range -->
+            <div class="col-md-2">
+              <label class="form-label">From Cost</label>
+              <input type="number" class="form-control" formControlName="fromcost" min="0" placeholder="From Cost">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">To Cost</label>
+              <input type="number" class="form-control" formControlName="tocost" min="0" placeholder="To Cost"
+                [ngClass]="{'is-invalid': courseForm.hasError('costRange') && courseForm.get('tocost')?.touched}">
+              <div class="invalid-feedback" *ngIf="courseForm.hasError('costRange') && courseForm.get('tocost')?.touched">
+                To Cost must be greater than or equal to From Cost
+              </div>
+            </div>
+            <!-- Gender -->
+            <div class="col-md-2">
+              <label class="form-label">Gender</label>
+              <select class="form-select" formControlName="gender">
+                <option value="both">Both</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="Trans">Trans</option>
+              </select>
+            </div>
+            <!-- Experience Level -->
+            <div class="col-md-2">
+              <label class="form-label">Prior Knowledge</label>
+              <select class="form-select" formControlName="experienceLevel">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+            <!-- No. of Sessions -->
+            <div class="col-md-2">
+              <label class="form-label">No. of Sessions</label>
+              <input type="number" class="form-control" formControlName="noOfSessions" min="1" placeholder="No. of Sessions">
+            </div>
+            <!-- Type -->
+            <div class="col-md-2">
+              <label class="form-label">Type<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="type" (change)="onCourseTypeChange()">
+                <option value="Online">Online</option>
+                <option value="Offline">In Person</option>
+              </select>
+            </div>
+            <!-- Location -->
+            <div class="col-md-4">
+              <label class="form-label">Location<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="location">
+                <option value="">Select Location</option>
+                <option *ngFor="let loc of savedLocations" [ngValue]="loc">{{ getLocationFormatted(loc) }}</option>
+              </select>
+              <button type="button" class="btn btn-outline-primary btn-sm mt-1" (click)="openLocationPopup()">Add Location</button>
+            </div>
+            <!-- Contact -->
+            <div class="col-md-4">
+              <label class="form-label">Contact<span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="contact">
+                <option value="">Select Contact</option>
+                <option *ngFor="let contact of savedContacts" [ngValue]="contact">{{ getContactFormatted(contact) }}</option>
+              </select>
+              <button type="button" class="btn btn-outline-primary btn-sm mt-1" (click)="openContactPopup()">Add Contact</button>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary px-5" [disabled]="isLoading">
+              <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+              {{ isLoading ? 'Saving...' : 'Save Course Details' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Class & Course Tables (always visible if there is data, below accordions, above Directory) -->
+  <div *ngIf="classDetailsData.length > 0 || courseDetailsData.length > 0" class="mt-4">
+    <div class="table-responsive mb-3" *ngIf="classDetailsData.length">
+      <h5>Class Details</h5>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Class Name</th>
+            <th>Type</th>
+            <th>Timings</th>
+            <th>Days</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let classItem of classDetailsData; let i = index">
+            <td>{{ classItem.className }}</td>
+            <td>{{ classItem.type }}</td>
+            <td>{{ classItem.timingsFrom }} - {{ classItem.timingsTo }}</td>
+            <td>{{ classItem.weekdays.join(', ') }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-1" (click)="handleEditClass(i)"><i class="ri-edit-line"></i></button>
+              <button class="btn btn-sm btn-outline-info me-1" (click)="handleCopyClass(i)"><i class="ri-file-copy-line"></i></button>
+              <button class="btn btn-sm btn-outline-danger" (click)="handleDeleteClass(i)"><i class="ri-delete-bin-line"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-responsive mb-3" *ngIf="courseDetailsData.length">
+      <h5>Course Details</h5>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Course Name</th>
+            <th>Type</th>
+            <th>Timings</th>
+            <th>Days</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let courseItem of courseDetailsData; let i = index">
+            <td>{{ courseItem.title }}</td>
+            <td>{{ courseItem.type }}</td>
+            <td>{{ courseItem.timingsFrom }} - {{ courseItem.timingsTo }}</td>
+            <td>{{ courseItem.weekdays.join(', ') }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-1" (click)="handleEditCourse(i)"><i class="ri-edit-line"></i></button>
+              <button class="btn btn-sm btn-outline-info me-1" (click)="handleCopyCourse(i)"><i class="ri-file-copy-line"></i></button>
+              <button class="btn btn-sm btn-outline-danger" (click)="handleDeleteCourse(i)"><i class="ri-delete-bin-line"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Directory Section -->
+    <div *ngIf="savedLocations.length || savedContacts.length" class="mt-4">
+      <h5>Directory</h5>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Address</th>
+            <th>Primary</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone</th>
+            <th>WhatsApp</th>
+            <th>Email</th>
+            <th>Contact Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let location of savedLocations; let i = index">
+            <td>{{ getLocationFormatted(location) }}</td>
+            <td>{{ savedContacts[i]?.contactType?.primary ? 'Yes' : '-' }}</td>
+            <td>{{ savedContacts[i]?.tutorFirstName || '-' }}</td>
+            <td>{{ savedContacts[i]?.tutorLastName || '-' }}</td>
+            <td>{{ savedContacts[i]?.tutorPhoneNo || '-' }}</td>
+            <td>{{ savedContacts[i]?.whatsappNo || '-' }}</td>
+            <td>{{ savedContacts[i]?.tutorEmailID || '-' }}</td>
+            <td>
+              <span *ngIf="savedContacts[i]?.contactType?.primary">Primary </span>
+              <span *ngIf="savedContacts[i]?.contactType?.secondary">Secondary </span>
+              <span *ngIf="savedContacts[i]?.contactType?.billing">Billing</span>
+              <span *ngIf="!savedContacts[i]">-</span>
+            </td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="handleDeleteLocation(i)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Final Submit Button -->
+    <div class="d-flex justify-content-center mt-4">
+      <button class="btn btn-success px-5 py-2" (click)="handleFinalSubmit()" [disabled]="isLoading">
+        {{ isLoading ? "Submitting..." : "Submit Registration" }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Modals and Popups -->
+  <!-- <app-location-popup *ngIf="isLocationPopupOpen" (close)="closeLocationPopup()" (submit)="handleLocationSubmit($event)"></app-location-popup>
+  <app-contact-popup *ngIf="isContactPopupOpen" (close)="closeContactPopup()" (submit)="handleContactSubmit($event)"></app-contact-popup>
+  <app-preview-popup *ngIf="isPreviewOpen"
+    [personalDetails]="personalDetailsData"
+    [instituteDetails]="instituteDetailsData"
+    [classDetails]="classDetailsData"
+    [courseDetails]="courseDetailsData"
+    [images]="images"
+    (submit)="handleSubmitAfterPreview()"
+    (close)="isPreviewOpen = false">
+  </app-preview-popup>
+  <app-success-popup *ngIf="isSuccessPopupOpen" [username]="username" (close)="handleClearForm()"></app-success-popup>
+  <app-delete-popup *ngIf="isDeleteOpen" [message]="deleteMessage" (delete)="onDeleteCallback && onDeleteCallback()" (close)="isDeleteOpen = false"></app-delete-popup> -->
+  <!-- <app-image-cropper *ngIf="isCropperOpen" [imageUrl]="tempImageUrl" (cropComplete)="handleCropComplete($event)" (close)="isCropperOpen = false"></app-image-cropper> -->
+</div>
+
+<ng-template #addDetailsmodal let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" (click)="modal.dismiss('Close click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="d-flex justify-content-center gap-3">
+            <!-- Class Details Card -->
+            <div class="card col-6 align-items-center text-center p-3 cursor-pointer shadow-sm"
+                 (click)="selectAddDetails('class', modal)">
+              <img src="assets/images/Video.svg" height="56" width="56" alt="Class Details">
+              <h3 class="h6 mt-2">Class Details</h3>
+              <p class="text-muted fw-medium">Provide class-related information</p>
+            </div>
+            <!-- Course Form Card -->
+            <div class="card col-6 align-items-center text-center p-3 cursor-pointer shadow-sm"
+                 (click)="selectAddDetails('course', modal)">
+              <img src="assets/images/Books.svg" height="56" width="56" alt="Course Form">
+              <h3 class="h6 mt-2">Course Form</h3>
+              <p class="text-muted fw-medium">Fill in course details</p>
+            </div>
+          </div>
+          <button type="button" class="btn w-100 btn-outline-secondary mt-3" (click)="modal.dismiss('Close click')" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+</ng-template>

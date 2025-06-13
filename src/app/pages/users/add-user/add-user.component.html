@@ -1,0 +1,78 @@
+<!-- User Registration Form (Admin Side, Bootstrap, Reactive Forms) -->
+<div class="bg-white rounded-3 border border-3 border-light p-4 mt-4">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <!-- Name -->
+     <div class="row g-2 mb-3">
+    <div class="col-md-6">
+      <label class="form-label text-secondary fw-bold">Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="name" placeholder="Enter Your Full Name" autofocus>
+      <div class="text-danger small mt-1" *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid">
+        {{ userForm.get('name')?.errors?.['required'] ? 'Name is required' : '' }}
+      </div>
+    </div>
+    <!-- Email -->
+    <div class="col-md-6">
+      <label class="form-label text-secondary fw-bold">E-Mail <span class="text-danger">*</span></label>
+      <input type="email" class="form-control" formControlName="emailId" placeholder="Enter Your Email">
+      <div class="text-danger small mt-1" *ngIf="userForm.get('emailId')?.touched && userForm.get('emailId')?.invalid">
+        <span *ngIf="userForm.get('emailId')?.errors?.['required']">Email is required</span>
+        <span *ngIf="userForm.get('emailId')?.errors?.['email']">Invalid email format</span>
+      </div>
+    </div>
+    <!-- Phone -->
+    <div class="col-md-6">
+      <label class="form-label text-secondary fw-bold">Contact <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <select class="form-select" formControlName="countryCode" style="max-width: 90px;">
+          <option value="+91">+91</option>
+          <option value="+98">+98</option>
+          <option value="+225">+225</option>
+        </select>
+        <input type="text" class="form-control" formControlName="phoneNumber" maxlength="10" placeholder="Enter Your Contact">
+      </div>
+      <div class="text-danger small mt-1" *ngIf="userForm.get('phoneNumber')?.touched && userForm.get('phoneNumber')?.invalid">
+        <span *ngIf="userForm.get('phoneNumber')?.errors?.['required']">Contact is required</span>
+        <span *ngIf="userForm.get('phoneNumber')?.errors?.['pattern']">Invalid phone number</span>
+      </div>
+    </div>
+    <!-- DOB & Gender -->
+    
+      <div class="col-md-6">
+        <label class="form-label text-secondary fw-bold">Date Of Birth</label>
+        <input type="date" class="form-control" formControlName="dob" placeholder="Select your Date Of Birth">
+        <div class="text-danger small mt-1" *ngIf="userForm.get('dob')?.touched && userForm.get('dob')?.invalid">
+          <span *ngIf="userForm.get('dob')?.errors?.['required']">Date of Birth is required</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-secondary fw-bold">Role <span class="text-danger">*</span></label>
+        <select class="form-select" formControlName="role">
+          <option value="">Select</option>
+          <option value="Admin">Admin</option>
+          <option value="User">User</option>
+          <option value="SuperAdmin">SuperAdmin</option>
+          <option value="Vendor">Vendor</option>
+        </select>
+        <div class="text-danger small mt-1" *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid">
+          <span *ngIf="userForm.get('role')?.errors?.['required']">Role is required</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-secondary fw-bold">Select Gender</label>
+        <select class="form-select" formControlName="gender">
+          <option value="">Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Trans">Trans</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+        <div class="text-danger small mt-1" *ngIf="userForm.get('gender')?.touched && userForm.get('gender')?.invalid">
+          <span *ngIf="userForm.get('gender')?.errors?.['required']">Gender is required</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary px-4" [disabled]="userForm.invalid">Add User</button>
+    </div>
+  </form>
+</div>

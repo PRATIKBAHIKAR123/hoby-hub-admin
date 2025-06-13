@@ -1,0 +1,68 @@
+<div class="modal-header">
+  <h2>Add Location</h2>
+</div>
+<form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+  <div class="modal-body">
+    <!-- Search Box -->
+    <div class="form-group">
+      <label class=" form-label">Search for a location</label>
+      <input #searchInput class=" form-control" formControlName="search" placeholder="Search for a location" (input)="onSearchInput($event)" />
+      
+    </div>
+    <div >
+        <button type="button" class="btn btn-primary w-100 mt-2" (click)="onSearchLocation()" [disabled]="!selectedPlace">Search By Location</button>
+    </div>
+    <!-- Map Container -->
+    <div class="form-group mb-3">
+      <div #mapContainer class="w-100" style="height: 420px; min-width: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div leaflet
+             [leafletOptions]="leafletOptions"
+             (leafletMapReady)="onMapReady($event)"
+             (leafletClick)="onMapClick($event)"
+             style="height: 100%; width: 100%; border-radius: 8px;"></div>
+      </div>
+    </div>
+    <!-- Form Section -->
+    <div class="form-section border rounded p-3">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class=" form-label">Address <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="address" placeholder="Address" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && locationForm.get('address')?.invalid">Address is required</div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class=" form-label">Road <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="road" placeholder="Road" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && locationForm.get('road')?.invalid">Road is required</div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class=" form-label">Area <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="area" placeholder="Area" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && locationForm.get('area')?.invalid">Area is required</div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class=" form-label">City <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="city" placeholder="City" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && locationForm.get('city')?.invalid">City is required</div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class=" form-label">State</label>
+          <input class=" form-control" formControlName="state" placeholder="State" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class=" form-label">Country</label>
+          <input class=" form-control" formControlName="country" placeholder="Country" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class=" form-label">Pincode</label>
+          <input class=" form-control" formControlName="pincode" placeholder="Pincode" />
+        </div>
+      </div>
+    </div>
+    <!-- Action Buttons -->
+    <div class="actions d-flex justify-content-end gap-2 mt-4">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">{{ isSubmitting ? 'Saving...' : 'Save Location' }}</button>
+    </div>
+  </div>
+</form>

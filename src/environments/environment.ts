@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   defaultauth: 'fackbackend',
-  apiUrl: 'https://localhost:54877/api/1',
-  imageUrl: 'https://localhost:54877',
+  apiUrl: 'https://api.hobyhub.com/api/1',
+  imageUrl: 'https://api.hobyhub.com',
   username: 'admin',
   password: '12345678',
   firebaseConfig: {

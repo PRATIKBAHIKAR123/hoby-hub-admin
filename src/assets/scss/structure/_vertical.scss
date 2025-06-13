@@ -120,7 +120,7 @@
                 }
 
                 &[aria-expanded=true] {
-                    color: var(--#{$prefix}vertical-menu-item-active-color);
+                    color: var(#FFF);
 
                     .icon-dual {
                         color: var(--#{$prefix}vertical-menu-item-hover-color);
@@ -157,7 +157,7 @@
 
             .nav-link {
                 padding: $vertical-menu-sub-item-padding-y $vertical-menu-sub-item-padding-x !important;
-                color: var(--#{$prefix}vertical-menu-sub-item-color);
+                color: var(#FFF);
                 white-space: none;
                 position: relative;
                 font-size: $vertical-menu-sub-item-font-size;
@@ -185,7 +185,7 @@
                 }
 
                 &.active {
-                    color: var(--#{$prefix}vertical-menu-item-active-color);
+                    color: var(#FFFF);
 
                     &:before {
                         background-color: var(--#{$prefix}vertical-menu-item-active-color);

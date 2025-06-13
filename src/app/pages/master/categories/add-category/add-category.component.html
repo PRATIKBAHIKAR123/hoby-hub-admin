@@ -1,0 +1,64 @@
+<div>
+    <div class="form-title">
+        Add New Category
+    </div>
+    <div class="form-section">
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <div>
+                        <label for="categoryName" class="form-label">Category Name</label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="categoryName"
+                            formControlName="categoryName"
+                            [ngClass]="{ 'is-invalid': submitted && f['categoryName'].errors }"
+                            placeholder="Category Name">
+                        <div *ngIf="submitted && f['categoryName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['categoryName'].errors['required']">Category name is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <div>
+                        <label for="sort" class="form-label">Sort</label>
+                        <input 
+                            type="number" 
+                            class="form-control" 
+                            id="sort"
+                            formControlName="sort"
+                            [ngClass]="{ 'is-invalid': submitted && f['sort'].errors }"
+                            placeholder="Sort">
+                        <div *ngIf="submitted && f['sort'].errors" class="invalid-feedback">
+                            <div *ngIf="f['sort'].errors['required']">Sort order is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <div>
+                        <label for="imagePath" class="form-label">Image path</label>
+                        <input 
+                            type="file" 
+                            class="form-control" 
+                            id="imagePath"
+                            formControlName="imagePath"
+                            [ngClass]="{ 'is-invalid': submitted && f['imagePath'].errors }"
+                            placeholder="Image">
+                        <div *ngIf="submitted && f['imagePath'].errors" class="invalid-feedback">
+                            <div *ngIf="f['imagePath'].errors['required']">Image is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-end flex mt-2 gap-2">
+                <button type="button" class="btn btn-outline-primary m-2" (click)="onCancel()">
+                    <span>Cancel</span>
+                </button>
+                <button type="submit" class="btn btn-primary waves-effect waves-light ml-2">
+                    <span>Submit</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

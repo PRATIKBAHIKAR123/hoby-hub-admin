@@ -1,0 +1,52 @@
+<div>
+    <div class="form-title">
+        Add New Sub Category
+    </div>
+    <div class="form-section">
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <div>
+                        <label for="categoryName" class="form-label">Category</label>
+                        <select 
+                            type="text" 
+                            class="form-control" 
+                            id="categoryName"
+                            formControlName="categoryName"
+                            [ngClass]="{ 'is-invalid': submitted && f['categoryName'].errors }"
+                            placeholder="Category Name">
+                            <option value="" disabled selected>Select Category</option>
+                            <option *ngFor="let category of [{id:1,name:'Category'}]" [value]="category.id">{{ category.name }}</option>
+                        </select>
+                        <div *ngIf="submitted && f['categoryName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['categoryName'].errors['required']">Category name is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <div>
+                        <label for="sort" class="form-label">Sub Category name</label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="sort"
+                            formControlName="sort"
+                            [ngClass]="{ 'is-invalid': submitted && f['sort'].errors }"
+                            placeholder="Sub Category ">
+                        <div *ngIf="submitted && f['sort'].errors" class="invalid-feedback">
+                            <div *ngIf="f['sort'].errors['required']">Sub Category is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-end flex mt-2 gap-2">
+                <button type="button" class="btn btn-outline-primary m-2" (click)="onCancel()">
+                    <span>Cancel</span>
+                </button>
+                <button type="submit" class="btn btn-primary waves-effect waves-light ml-2">
+                    <span>Submit</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

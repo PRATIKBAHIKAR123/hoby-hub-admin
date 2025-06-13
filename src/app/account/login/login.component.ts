@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.prod';
 import { LocalStorageServiceService } from '../../core/services/local-storage-service.service';
 import { ToastrMessageService } from 'src/app/core/services/toastr-message.service';
 import { appCommon } from 'src/app/common/_appCommon';

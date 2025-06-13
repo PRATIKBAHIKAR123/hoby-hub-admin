@@ -18,20 +18,24 @@ export class httpInterceptor implements HttpInterceptor {
 
   constructor(private authServiceService: AuthenticationService) { }
 
-  intercept(request: HttpRequest<any>, newRequest: HttpHandler): Observable<HttpEvent<any>> {
-
-    let tokenInfo = this.authServiceService.getTokenInfo();
-    let cloneReq = request;
-
-    if (tokenInfo && tokenInfo.AccessToken) {
-      cloneReq = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${tokenInfo.AccessToken}`
-        }
-      });
-    }
-
-    return newRequest.handle(cloneReq);
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  // Skip adding Authorization for Google Maps API
+  if (request.url.includes('maps.googleapis.com')) {
+    return next.handle(request);
   }
+
+  let tokenInfo = this.authServiceService.getTokenInfo();
+  let cloneReq = request;
+
+  if (tokenInfo && tokenInfo.AccessToken) {
+    cloneReq = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${tokenInfo.AccessToken}`
+      }
+    });
+  }
+
+  return next.handle(cloneReq);
+}
 
 }

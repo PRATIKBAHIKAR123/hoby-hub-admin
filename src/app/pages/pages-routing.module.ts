@@ -11,6 +11,22 @@ const routes: Routes = [
     path: "",
     component: DashboardComponent
   },
+    {
+    path: "activities",
+    loadChildren: () => import('./activities/activities.module').then(m => m.ActivitiesModule), canActivate: [AuthGuard]
+  },
+    {
+    path: "masters",
+    loadChildren: () => import('./master/master.module').then(m => m.MasterModule), canActivate: [AuthGuard]
+  },
+      {
+    path: "users",
+    loadChildren: () => import('./users/users.module').then(m => m.UsersModule), canActivate: [AuthGuard]
+  },
+  {
+    path: "terms-and-policies",
+    loadChildren: () => import('./terms-and-policy/terms-and-policy.module').then(m => m.TermsAndPolicyModule), canActivate: [AuthGuard]
+  },
   {
     path: "programs-registered",
     loadChildren: () => import('./programs/programs.module').then(m => m.ProgramsModule), canActivate: [AuthGuard]

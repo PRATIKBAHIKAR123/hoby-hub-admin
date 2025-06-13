@@ -51,4 +51,16 @@ export class ActivityService {
     return this.http.get(`${environment.apiUrl}/admin/activity/get?id=${id}`);
   }
 
+    registerVendor(formData: FormData): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/vendor/register`, formData);
+  }
+
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/category/list`);
+  }
+
+  getSubCategories(): Observable<any[]> {
+    return this.http.post<any[]>(`${environment.apiUrl}/sub-category/list`,{});
+  }
+
 } 

@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^16.2.5",
     "@angular/router": "^16.2.5",
     "@asymmetrik/ngx-leaflet": "^16.0.1",
-    "@ckeditor/ckeditor5-angular": "^7.0.0",
+    "@ckeditor/ckeditor5-angular": "^7.0.1",
     "@ckeditor/ckeditor5-build-classic": "^39.0.2",
     "@ctrl/ngx-emoji-mart": "^9.2.0",
     "@fullcalendar/angular": "^6.1.8",
@@ -41,6 +41,8 @@
     "@types/google.maps": "^3.54.1",
     "@types/googlemaps": "^3.43.3",
     "@types/jasmine": "^4.3.6",
+    "ag-grid-angular": "^33.3.2",
+    "ag-grid-community": "^33.3.2",
     "angular-feather": "^6.5.0",
     "angular-ng-autocomplete": "^2.0.12",
     "angular-ng-stepper": "^2.0.0",
@@ -77,6 +79,7 @@
     "ngx-drag-drop": "^16.1.0",
     "ngx-dropzone-wrapper": "^14.0.0",
     "ngx-echarts": "^16.0.0",
+    "ngx-image-cropper": "^6.0.2",
     "ngx-lightbox": "^3.0.0",
     "ngx-mask": "^16.3.6",
     "ngx-masonry": "^14.0.1",
@@ -107,8 +110,8 @@
     "@types/quill": "^2.0.11",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "typescript": "~5.1.6",
-    "ngx-toastr": "^18.0.0"
+    "ngx-toastr": "^18.0.0",
+    "typescript": "~5.1.6"
   },
   "browserslist": [
     "last 1 version",

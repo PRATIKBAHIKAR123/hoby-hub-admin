@@ -37,7 +37,7 @@
             <li class="menu-title" *ngIf="item.isTitle"><span data-key="t-menu">{{ item.label | translate }}</span></li>
 
             <li class="nav-item" *ngIf="!item.isTitle && !item.isLayout">
-              <a *ngIf="hasItems(item)" href="javascript:void(0);" class="is-parent nav-link menu-link"
+              <a *ngIf="hasItems(item)"  class="is-parent nav-link menu-link"
                 [ngClass]="{'has-arrow': !item.badge, 'has-dropdown': item.badge}" data-bs-toggle="collapse"
                 aria-expanded="false" (click)="toggleItem($event)">
                 <!-- <i class="{{ item.icon }} icon nav-icon" class=""></i> -->
@@ -66,7 +66,7 @@
                         *ngIf="subitem.badge">{{subitem.badge.text
                         | translate}}</span>
                     </a>
-                    <a *ngIf="hasItems(subitem)" class="nav-link" href="javascript:void(0);"
+                    <a *ngIf="hasItems(subitem)" class="nav-link"
                       [attr.data-parent]="subitem.parentId" data-bs-toggle="collapse" aria-expanded="false"
                       (click)="toggleSubItem($event)">
                       {{ subitem.label | translate}}

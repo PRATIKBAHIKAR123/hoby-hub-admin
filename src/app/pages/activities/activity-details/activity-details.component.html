@@ -1,0 +1,243 @@
+<!-- Redesigned Vendor Details Page -->
+<div class="container-fluid py-3" id="vendor-details">
+    <!-- Sticky Header Section -->
+    <div class="row align-items-center mb-4 sticky-top bg-white shadow-sm py-2" style="z-index: 10; top: 0;">
+        <div class="col-md-8 d-flex flex-column flex-md-row align-items-md-center gap-2">
+            <div class="fw-bold fs-4 mb-2 mb-md-0">Edit / Approve / Reject / Delete the following Ad :</div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" (click)="onEditActivity()">Edit</button>
+                <button class="btn btn-success" (click)="activity && openApproveModal(approveModal, activity)"
+                    [disabled]="!activity || activity.approved">Approve</button>
+                <button class="btn btn-warning">Reject</button>
+                <button class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="small">Posted Date and Time : {{ activity?.createdDate | date:"dd-MM-yyyy HH:mm" }}</div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="text-center py-5" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="row g-4" *ngIf="activity && !isLoading">
+        <!-- Left Main Details -->
+        <div class="col-lg-7">
+            <!-- Main Info Card -->
+            <div class="card mb-3 shadow-md">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3 gap-3">
+                        
+                        <div>
+                            <div class="fw-bold fs-5 mb-1">{{ activity.title }}</div>
+                            <div class="text-muted small">Since {{ activity.sinceYear || '-' }}</div>
+                            <div class="text-muted small">By <b>{{ activity.companyName }}</b></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="badge bg-secondary me-2">{{ activity.type }}</span>
+                        <span class="badge bg-info">{{ activity.subCategoryId }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="fw-semibold">Description</div>
+                        <div class="text-muted">{{ activity.description }}</div>
+                    </div>
+                    <!-- Main Image Carousel -->
+                    <div class="mb-3 position-relative text-center">
+                        <ngb-carousel [showNavigationIndicators]="true" [interval]="4000">
+                            <ng-template ngbSlide>
+                                <img [src]="activity.thumbnailImage" class="img-fluid rounded w-100"
+                                    style="max-width: 450px;  max-height: 450px; border: 6px solid #fff; box-shadow: 0 0 10px #ccc;"
+                                    alt="Activity Image">
+                            </ng-template>
+                            <ng-template ngbSlide *ngFor="let image of activity.images">
+                                <img [src]="image" class="img-fluid rounded w-100"
+                                    style="max-width: 450px; max-height: 450px; border: 6px solid #fff; box-shadow: 0 0 10px #ccc;"
+                                    [alt]="activity.title">
+                            </ng-template>
+                        </ngb-carousel>
+                    </div>
+                    <!-- Gallery Images -->
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mb-3" *ngIf="activity.images?.length">
+                        <img *ngFor="let image of activity.images" [src]="image" [alt]="activity.title"
+                            class="img-fluid" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    </div>
+                </div>
+            </div>
+            <!-- About Section -->
+            <div class="card mb-3">
+                <div class="card-body bg-light rounded-3">
+                    <h6 class="mb-3 fw-bold text-primary">About Activity</h6>
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-2">
+                            <strong>Age Restriction</strong><br>
+                            <span>{{ activity.ageRestrictionFrom }} - {{ activity.ageRestrictionTo }} years</span>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <strong>Session</strong><br>
+                            <span>{{ activity.sessionCountFrom }} - {{ activity.sessionCountTo }}</span>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <strong>Rate</strong><br>
+                            <span> {{ activity.rate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Class Details -->
+            <div class="card mb-3" *ngIf="activity.classDetails?.length">
+                <div class="card-body bg-light rounded-3">
+                    <h6 class="mb-3 fw-bold text-primary">Class Details</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm align-middle class-details-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Day</th>
+                                    <th>Timing</th>
+                                    <th>Age</th>
+                                    <th>Session</th>
+                                    <th>Gender</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let class of activity.classDetails">
+                                    <td>{{ class.type }}</td>
+                                    <td>{{ class.day }}</td>
+                                    <td>{{ class.timingsFrom }} - {{ class.timingsTo }}</td>
+                                    <td>{{ class.ageFrom }} - {{ class.ageTo }}</td>
+                                    <td>{{ class.sessionFrom }} - {{ class.sessionTo}}</td>
+                                    <td>{{ class.gender }}</td>
+                                    <td>{{ class.fromPrice }} - {{ class.toPrice }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Course Details -->
+            <div class="card mb-3" *ngIf="activity.courseDetails?.length">
+                <div class="card-body bg-light rounded-3">
+                    <h6 class="mb-3 fw-bold text-primary">Course Details</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm align-middle class-details-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Day</th>
+                                    <th>Timing</th>
+                                    <th>Age</th>
+                                    <th>Session</th>
+                                    <th>Gender</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let course of activity.courseDetails">
+                                    <td>{{ course.type }}</td>
+                                    <td>{{ course.day }}</td>
+                                    <td>{{ course.timingsFrom }} - {{ course.timingsTo }}</td>
+                                    <td>{{ course.ageFrom }} - {{ course.ageTo }}</td>
+                                    <td>{{ course.sessionFrom }} - {{ course.sessionTo }}</td>
+                                    <td>{{ course.gender }}</td>
+                                    <td>{{ course.fromPrice }} - {{ course.toPrice }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Items to Carry -->
+            <div class="card mb-3">
+                <div class="card-body bg-light rounded-3">
+                    <h6 class="fw-bold text-black">Items to Carry for the activity</h6>
+                    <!-- Add items here if available -->
+                </div>
+            </div>
+        </div>
+        <!-- Right Contact Info & Map -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm mb-3 bg-light border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="fw-bold fs-5 mb-3 text-center text-primary">Contact Information</div>
+                    <div class="d-flex flex-column align-items-center mb-3">
+                        <img [src]="activity.profileImage || 'https://via.placeholder.com/100'"
+                            class="rounded-circle border border-3 border-white shadow"
+                            style="width: 100px; height: 100px; object-fit: cover; background: #e0e7ef;"
+                            alt="Profile" />
+                    </div>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <span class="fw-semibold text-primary">Institute:</span>
+                            <span class="ms-1">{{ activity.companyName }}</span>
+                        </li>
+                        <li class="mb-2" *ngIf="activity.tutorIntro">
+                            <span class="fw-semibold text-primary">Intro:</span>
+                            <span class="ms-1 d-block">{{ activity.tutorIntro }}</span>
+                        </li>
+                        <li class="mb-2" *ngIf="activity.tutorEmailID">
+                            <span class="fw-semibold text-primary">Email:</span>
+                            <a class="ms-1 text-decoration-none" [href]="'mailto:' + activity.tutorEmailID">{{ activity.tutorEmailID }}</a>
+                        </li>
+                        <li class="mb-2" *ngIf="activity.tutorPhoneNo">
+                            <span class="fw-semibold text-primary">Phone:</span>
+                            <a class="ms-1 text-decoration-none" [href]="'tel:' + getPhoneNumber()">{{ getPhoneNumber() }}</a>
+                        </li>
+                        <li class="mb-2" *ngIf="activity.whatsappNo">
+                            <span class="fw-semibold text-primary">Whatsapp:</span>
+                            <a class="ms-1 text-decoration-none" [href]="'tel:' + getWhatsappNumber()">{{ getWhatsappNumber() }}</a>
+                        </li>
+                        <li class="mb-2" *ngIf="activity.address || activity.road">
+                            <span class="fw-semibold text-primary">Address:</span>
+                            <span class="ms-1 d-block" [innerHTML]="getFullAddress()"></span>
+                        </li>
+                        <li *ngIf="activity.longitude && activity.latitude">
+                            <a [href]="getGoogleMapsUrl()" target="_blank" class="text-primary text-decoration-underline">Get Direction</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Google Maps Section -->
+            <div class="card" *ngIf="activity.longitude && activity.latitude">
+                <div class="card-body p-0">
+                    <!-- <iframe
+                        [src]="'https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=' + activity.latitude + ',' + activity.longitude"
+                        width="100%"
+                        height="250"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Approve Modal -->
+<ng-template #approveModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Approve Activity</h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to approve this activity?</p>
+        <div class="mb-3">
+            <strong>Title:</strong> {{ selectedActivity?.title }}
+        </div>
+        <div class="mb-3">
+            <strong>Description:</strong> {{ selectedActivity?.description }}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="approveActivity()">Approve</button>
+    </div>
+</ng-template>

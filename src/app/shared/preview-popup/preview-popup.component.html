@@ -1,0 +1,76 @@
+<div class="modal-header">
+  <h4 class="modal-title">Preview Registration</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+</div>
+<div class="modal-body">
+  <h5>Personal Details</h5>
+  <ul class="list-group mb-3">
+    <li class="list-group-item"><b>Name:</b> {{personalDetails?.firstName}} {{personalDetails?.lastName}}</li>
+    <li class="list-group-item"><b>Email:</b> {{personalDetails?.emailId}}</li>
+    <li class="list-group-item"><b>Phone:</b> {{personalDetails?.phoneNumber}}</li>
+    <li class="list-group-item"><b>Gender:</b> {{personalDetails?.gender}}</li>
+    <li class="list-group-item"><b>Date of Birth:</b> {{personalDetails?.dob}}</li>
+    <li class="list-group-item" *ngIf="profileImage">
+      <b>Profile Image:</b><br>
+      <img [src]="profileImage" alt="Profile" style="max-width:100px;max-height:100px;border-radius:8px;object-fit:cover;">
+    </li>
+  </ul>
+  <h5>Institute Details</h5>
+  <ul class="list-group mb-3">
+    <li class="list-group-item"><b>Program Title:</b> {{instituteDetails?.programTitle}}</li>
+    <li class="list-group-item"><b>Institute Name:</b> {{instituteDetails?.instituteName}}</li>
+    <li class="list-group-item"><b>Since:</b> {{instituteDetails?.since}}</li>
+    <li class="list-group-item"><b>GST No:</b> {{instituteDetails?.gstNo}}</li>
+    <li class="list-group-item"><b>Introduction:</b> {{instituteDetails?.introduction}}</li>
+    <li class="list-group-item"><b>Website:</b> {{instituteDetails?.websiteName}}</li>
+    <li class="list-group-item"><b>Class Level:</b> {{instituteDetails?.classLevel}}</li>
+    <li class="list-group-item"><b>Instagram:</b> {{instituteDetails?.instagramAccount}}</li>
+    <li class="list-group-item"><b>YouTube:</b> {{instituteDetails?.youtubeAccount}}</li>
+    <li class="list-group-item" *ngIf="images?.length">
+      <b>Institute Images:</b><br>
+      <div class="d-flex flex-wrap gap-2 mt-2">
+        <img *ngFor="let img of images" [src]="img" style="width:80px;height:80px;object-fit:cover;border-radius:6px;">
+      </div>
+    </li>
+  </ul>
+  <h5 *ngIf="classDetails?.length">Class Details</h5>
+  <div *ngFor="let classItem of classDetails" class="mb-2">
+    <ul class="list-group">
+      <li class="list-group-item"><b>Class Name:</b> {{classItem.className}}</li>
+      <li class="list-group-item"><b>Category:</b> {{classItem.category}}</li>
+      <li class="list-group-item"><b>Sub Category:</b> {{classItem.subCategory}}</li>
+      <li class="list-group-item"><b>Timings:</b> {{classItem.timingsFrom}} - {{classItem.timingsTo}}</li>
+      <li class="list-group-item"><b>Weekdays:</b> {{classItem.weekdays?.join(', ')}}</li>
+      <li class="list-group-item"><b>Age Range:</b> {{classItem.fromage}} - {{classItem.toage}}</li>
+      <li class="list-group-item"><b>Cost Range:</b> {{classItem.fromcost}} - {{classItem.tocost}}</li>
+      <li class="list-group-item"><b>Gender:</b> {{classItem.gender}}</li>
+      <li class="list-group-item"><b>Experience Level:</b> {{classItem.experienceLevel}}</li>
+      <li class="list-group-item"><b>No. of Sessions:</b> {{classItem.noOfSessions}}</li>
+      <li class="list-group-item"><b>Type:</b> {{classItem.type}}</li>
+      <li class="list-group-item"><b>Location:</b> {{classItem.location?.address || classItem.location}}</li>
+      <li class="list-group-item"><b>Contact:</b> {{classItem.contact?.tutorFirstName || classItem.contact}}</li>
+    </ul>
+  </div>
+  <h5 *ngIf="courseDetails?.length">Course Details</h5>
+  <div *ngFor="let courseItem of courseDetails" class="mb-2">
+    <ul class="list-group">
+      <li class="list-group-item"><b>Course Name:</b> {{courseItem.courseName}}</li>
+      <li class="list-group-item"><b>Category:</b> {{courseItem.category}}</li>
+      <li class="list-group-item"><b>Sub Category:</b> {{courseItem.subCategory}}</li>
+      <li class="list-group-item"><b>Timings:</b> {{courseItem.timingsFrom}} - {{courseItem.timingsTo}}</li>
+      <li class="list-group-item"><b>Weekdays:</b> {{courseItem.weekdays?.join(', ')}}</li>
+      <li class="list-group-item"><b>Age Range:</b> {{courseItem.fromage}} - {{courseItem.toage}}</li>
+      <li class="list-group-item"><b>Cost Range:</b> {{courseItem.fromcost}} - {{courseItem.tocost}}</li>
+      <li class="list-group-item"><b>Gender:</b> {{courseItem.gender}}</li>
+      <li class="list-group-item"><b>Experience Level:</b> {{courseItem.experienceLevel}}</li>
+      <li class="list-group-item"><b>No. of Sessions:</b> {{courseItem.noOfSessions}}</li>
+      <li class="list-group-item"><b>Type:</b> {{courseItem.type}}</li>
+      <li class="list-group-item"><b>Location:</b> {{courseItem.location?.address || courseItem.location}}</li>
+      <li class="list-group-item"><b>Contact:</b> {{courseItem.contact?.tutorFirstName || courseItem.contact}}</li>
+    </ul>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+  <button class="btn btn-success" (click)="confirm()">Confirm & Submit</button>
+</div>

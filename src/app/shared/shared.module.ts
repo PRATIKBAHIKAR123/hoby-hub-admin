@@ -45,6 +45,11 @@ import { AddLocationPopupComponent } from './add-location-popup/add-location-pop
 import { AddContactPopupComponent } from './add-contact-popup/add-contact-popup.component';
 import { DirectoryComponent } from './directory/directory.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import { CropImagePopupComponent } from './crop-image-popup/crop-image-popup.component';
+import {  ImageCropperModule } from 'ngx-image-cropper';
+import { PreviewPopupComponent } from './preview-popup/preview-popup.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
@@ -79,16 +84,21 @@ import { ReactiveFormsModule } from '@angular/forms';
     FileUploadComponent,
     AddLocationPopupComponent,
     AddContactPopupComponent,
-    DirectoryComponent
+    DirectoryComponent,
+    DeleteConfirmationModalComponent,
+    CropImagePopupComponent,
+    PreviewPopupComponent
   ],
   imports: [
     CommonModule,
     NgbNavModule,
     NgbAccordionModule,
     NgbDropdownModule,
+    ImageCropperModule,
     SlickCarouselModule,
     CountUpModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LeafletModule
   ],
   exports: [BreadcrumbsComponent,
     
@@ -97,6 +107,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     LandingScrollspyDirective,
     AddContactPopupComponent,
     DirectoryComponent,
-    FileUploadComponent]
+    FileUploadComponent,
+    PreviewPopupComponent]
 })
 export class SharedModule { }

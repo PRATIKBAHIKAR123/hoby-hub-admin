@@ -16,5 +16,7 @@ export const GlobalComponent = {
 
     // Customers Api
     customer:'apps/customer',
+
+    GOOGLE_MAPS_API_KEY: 'AIzaSyBu5_sJSqh-SG1-GjuFsbG6KVuNzs6vuSA',
    
 }

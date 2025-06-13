@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h2>Contact Details</h2>
+    </div>
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [checked]="useProfileDetails" (change)="onUseProfileDetailsChange($event)">
+          Use same details as Profile
+        </label>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class=" form-label">First Name <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="tutorFirstName" [disabled]="useProfileDetails" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && contactForm.get('tutorFirstName')?.invalid">First name is required</div>
+        </div>
+        <div class="col-md-6">
+          <label class=" form-label">Last Name <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="tutorLastName" [disabled]="useProfileDetails" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && contactForm.get('tutorLastName')?.invalid">Last name is required</div>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class=" form-label">Email <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="tutorEmailID" [disabled]="useProfileDetails" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && contactForm.get('tutorEmailID')?.invalid">Valid email is required</div>
+        </div>
+        <div class="col-md-6">
+          <label class=" form-label">Phone Number <span class="text-danger">*</span></label>
+          <input class=" form-control" formControlName="tutorPhoneNo" [disabled]="useProfileDetails" (input)="onPhoneChange($event, 'tutorPhoneNo')" />
+          <div class="invalid-feedback" *ngIf="wasSubmitted && contactForm.get('tutorPhoneNo')?.invalid">Valid phone is required</div>
+        </div>
+        <div class="col-md-6">
+          <label class=" form-label">WhatsApp Number</label>
+          <input class=" form-control" formControlName="thatsappNo" [disabled]="useSameNumber || useProfileDetails" (input)="onPhoneChange($event, 'thatsappNo')" />
+          <label class=" form-label">
+            <input type="checkbox" [checked]="useSameNumber" (change)="onUseSameNumberChange($event)" [disabled]="useProfileDetails">
+            Use same number as contact number
+          </label>
+        </div>
+      </div>
+      <div>
+        <label class=" form-label">Introduction</label>
+        <textarea class=" form-control" formControlName="tutorIntro"></textarea>
+      </div>
+      <div>
+        <label class=" form-label">Profile photo</label>
+        <input class=" form-control" type="file" (change)="onFileChange($event)" accept=".jpeg, .jpg" />
+        <div *ngIf="images.length">
+          <img [src]="images[0]" alt="Profile" style="max-width:100px;max-height:100px;" />
+        </div>
+        <small>Only support jpg, png and avif files</small>
+      </div>
+      <div class="actions d-flex justify-content-end gap-3 mt-3">
+        <button type="button" class="btn btn-success px-5 py-2" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary px-5 py-2" [disabled]="isSubmitting">{{ isSubmitting ? 'Saving...' : 'Save' }}</button>
+      </div>
+      </div>
+    </form>
+
