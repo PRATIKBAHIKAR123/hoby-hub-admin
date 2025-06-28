@@ -14,7 +14,7 @@ import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirma
 })
 export class ActivitiesComponent {
 
-  selectedStatus: string = 'All';
+  selectedStatus: string = '1';
   searchTxt: string = '';
 
   filterAds(status: string) {
