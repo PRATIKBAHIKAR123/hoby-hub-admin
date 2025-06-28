@@ -104,6 +104,7 @@ export class ActivitiesComponent {
 
   ngOnInit() {
     this.loadActivities();
+    
   }
 
   loadCategories() {
@@ -119,8 +120,9 @@ export class ActivitiesComponent {
     this.activityService.getVendorActivities(1).subscribe((data) => {
       this.rowData = data;
       this.filterRowData = data;
-      this.gridApi!.setRowData(this.rowData);
+      //this.gridApi!.setRowData(this.rowData);
     })
+    this.filterAds('1');
     this.isLoading = false;
   }
 
