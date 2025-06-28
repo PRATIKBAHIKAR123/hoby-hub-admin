@@ -12,6 +12,7 @@ import { PreviewPopupComponent } from 'src/app/shared/preview-popup/preview-popu
 import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirmation-modal/delete-confirmation-modal.component';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
+import { VendorService } from 'src/app/services/vendor.service';
 @Component({
   selector: 'app-add-new-ad',
   templateUrl: './add-new-ad.component.html',
@@ -28,8 +29,8 @@ export class AddNewAdComponent {
   classForm!: FormGroup;
   courseForm!: FormGroup;
 
-  classSubcategories:any = [];
-courseSubcategories:any = [];
+  classSubcategories: any = [];
+  courseSubcategories: any = [];
 
   // State variables
   isLoading = false;
@@ -39,7 +40,7 @@ courseSubcategories:any = [];
   imageUrls: string[] = [];
   selectedThumbnailIndex: number | null = null;
   categories: Category[] = [];
-    subcategories: SubCategory[] = [];
+  subcategories: SubCategory[] = [];
   savedLocations: LocationData[] = [];
   savedContacts: Contact[] = [];
   showClassFields = false;
@@ -68,20 +69,31 @@ courseSubcategories:any = [];
   personalDetailsData: any = null;
   instituteDetailsData: any = null;
 
-  weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  weekdays = [
+  { short: 'Su', full: 'Sunday' },
+  { short: 'Mo', full: 'Monday' },
+  { short: 'Tu', full: 'Tuesday' },
+  { short: 'We', full: 'Wednesday' },
+  { short: 'Th', full: 'Thursday' },
+  { short: 'Fr', full: 'Friday' },
+  { short: 'Sa', full: 'Saturday' }
+];
+  activityId: number | null = null;
+  
   yearsList: number[] = [];
-
+  classToEdit: ClassCourseDetails | null = null;
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
     private activityService: ActivityService,
     private toastr: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private vendorService: VendorService
   ) {
-      const currentYear = new Date().getFullYear();
-  for (let year = currentYear; year >= 1950; year--) {
-    this.yearsList.push(year);
-  }
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 1950; year--) {
+      this.yearsList.push(year);
+    }
     this.initializeForms();
   }
 
@@ -89,12 +101,13 @@ courseSubcategories:any = [];
     this.loadCategories();
     this.loadSubCategories();
     this.loadSavedData();
-      this.route.paramMap.subscribe(params => {
-    const id = params.get('id');
-    if (id) {
-      this.fetchActivityDetails(+id);
-    }
-  });
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      this.activityId = id ? +id : null;
+      if (id) {
+        this.fetchActivityDetails(+id);
+      }
+    });
   }
 
   private initializeForms() {
@@ -140,12 +153,15 @@ courseSubcategories:any = [];
       gender: ['both'],
       experienceLevel: ['beginner'],
       noOfSessions: ['1'],
-      location: [null, [Validators.required]],
-      contact: [null, [Validators.required]]
+      sessionFrom: [''],
+      sessionTo: [''],
+      location: ['', [Validators.required]],
+      contact: ['', [Validators.required]]
     }, {
       validators: [
         minLessThanMaxValidator('fromage', 'toage', 'ageRange'),
-        minLessThanMaxValidator('fromcost', 'tocost', 'costRange')
+        minLessThanMaxValidator('fromcost', 'tocost', 'costRange'),
+        minLessThanMaxValidator('sessionFrom', 'sessionTo', 'sessionRange')
       ]
     });
 
@@ -165,12 +181,15 @@ courseSubcategories:any = [];
       gender: ['both'],
       experienceLevel: ['beginner'],
       noOfSessions: ['1'],
-      location: [null, [Validators.required]],
-      contact: [null, [Validators.required]]
+      sessionFrom: [''],
+      sessionTo: [''],
+      location: ['', [Validators.required]],
+      contact: ['', [Validators.required]]
     }, {
       validators: [
         minLessThanMaxValidator('fromage', 'toage', 'ageRange'),
-        minLessThanMaxValidator('fromcost', 'tocost', 'costRange')
+        minLessThanMaxValidator('fromcost', 'tocost', 'costRange'),
+        minLessThanMaxValidator('sessionFrom', 'sessionTo', 'sessionRange')
       ]
     });
   }
@@ -178,10 +197,11 @@ courseSubcategories:any = [];
   private loadCategories() {
     this.isLoading = false;
     this.activityService.getCategories().subscribe({
-      next: (data:any) => {
+      next: (data: any) => {
         this.categories = data;
+
       },
-      error: (error:any) => {
+      error: (error: any) => {
         this.toastr.error('Error loading categories');
         console.error('Error:', error);
       },
@@ -191,13 +211,16 @@ courseSubcategories:any = [];
     });
   }
 
-   loadSubCategories(){
-this.isLoading = false;
+  loadSubCategories() {
+    this.isLoading = false;
     this.activityService.getSubCategories().subscribe({
-      next: (data:any) => {
+      next: (data: any) => {
         this.subcategories = data;
+        if (this.subcategories.length && this.classToEdit?.subCategoryID) {
+          this.setSubCategoryForClass(this.classToEdit);
+        }
       },
-      error: (error:any) => {
+      error: (error: any) => {
         this.toastr.error('Error loading categories');
         console.error('Error:', error);
       },
@@ -205,104 +228,164 @@ this.isLoading = false;
         this.isLoading = false;
       }
     });
-   }
+  }
 
-       fetchActivityDetails(activityId: number) {
-        this.isLoading = true;
-        this.activityService.getActivityById(activityId).subscribe({
-            next: (data) => {
-                // Process image URLs
-                if (data.thumbnailImage) {
-                    data.thumbnailImage = this.processImageUrl(data.thumbnailImage);
-                }
-                if (data.images) {
-                    data.images = data.images.map((img: string) => this.processImageUrl(img));
-                }
-                if (data.profileImage) {
-                    data.profileImage = this.processImageUrl(data.profileImage);
-                }
-
-                // Patch Institute Details
-                this.instituteForm.patchValue({
-                    programTitle: data.title || '',
-                    instituteName: data.companyName || '',
-                    since: data.sinceYear || '',
-                    gstNo: data.gstNo || '',
-                    introduction: data.description || '',
-                    websiteName: data.website || '',
-                    classLevel: data.classLevel || '',
-                    instagramAccount: data.instagramAcc || '',
-                    youtubeAccount: data.youtubeAcc || '',
-                    // thumbnailImageFile: data.thumbnailImage, // handle image separately if needed
-                });
-                this.instituteDetailsData = this.instituteForm.value;
-                this.completedSections.instituteDetails = true;
-
-                // Patch Personal Details
-                this.personalForm.patchValue({
-                    firstName: data.tutorFirstName || '',
-                    lastName: data.tutorLastName || '',
-                    phoneNumber: data.tutorPhoneNo || '',
-                    emailId: data.tutorEmailID || '',
-                    gender: '', // If available in data
-                    dob: '',    // If available in data
-                    // profileImageFile: data.profileImage, // handle image separately if needed
-                });
-                this.personalDetailsData = this.personalForm.value;
-                this.completedSections.personalDetails = true;
-
-                // Patch Class Details Table
-                this.classDetailsData = Array.isArray(data.classDetails)
-  ? data.classDetails.map((item: any) => ({
-      ...item,
-      className: item.className || item.title || '',
-      weekdays: item.day ? item.day.split(',') : [], // Map title to className if className is missing
-    }))
-  : [];
-if (this.classDetailsData.length > 0) {
-  this.activeAccordion = 'item-2';
-  this.completedSections.classDetails = true;
-}
-// Patch Course Details Table
-this.courseDetailsData = Array.isArray(data.courseDetails)
-  ? data.courseDetails.map((item: any) => ({
-      ...item,
-      courseName: item.courseName || item.title || '', // Map title to courseName if courseName is missing
-      weekdays: item.day ? item.day.split(',') : [], // Convert day string to array
-    }))
-  : [];
-if (this.courseDetailsData.length > 0) {
-  this.activeAccordion = 'item-3';
-  this.completedSections.classDetails = true;
-}
-
-                // Patch Images
-                this.imageUrls = Array.isArray(data.images) ? data.images : [];
-                this.profileImagePreview = data.profileImage || null;
-
-                // Set thumbnail if available
-                if (data.thumbnailImage) {
-                    this.imageUrls.unshift(data.thumbnailImage);
-                    this.selectedThumbnailIndex = 0;
-                }
-
-                // Open all relevant accordions if data exists
-                if (this.personalDetailsData) this.activeAccordion = 'item-0';
-                if (this.instituteDetailsData) this.activeAccordion = 'item-1';
-                if (this.classDetailsData.length > 0) this.activeAccordion = 'item-2';
-                if (this.courseDetailsData.length > 0) this.activeAccordion = 'item-3';
-
-                // Set flags
-                this.activeAccordion = 'item-0';
-                this.isLoading = false;
-            },
-            error: (error) => {
-                console.error('Error fetching activity details:', error);
-                this.isLoading = false;
-                this.toastr.error('Error loading activity details', 'Error');
-            }
+    loadVendors(id:any) {
+    // Replace this with your actual API call
+    this.vendorService.getVendorList().subscribe((data:any)=>{
+      var vendor = data.filter((vendor: any) => vendor.id==id)[0];
+      this.personalForm.patchValue({
+          firstName: vendor.name.split(' ')[0] || '',
+          lastName: vendor.name.split(' ')[1] || '',
+          phoneNumber: vendor.phoneNumber || '',
+          emailId: vendor.email || 'test@mail.com',
+          gender: vendor.email || 'Male', // If available in data
+          dob: '',    // If available in data
+          // profileImageFile: data.profileImage, // handle image separately if needed
         });
-    }
+    })
+    this.isLoading = false;
+  }
+
+  fetchActivityDetails(activityId: number) {
+    this.isLoading = true;
+    this.activityService.getActivityById(activityId).subscribe({
+      next: (data) => {
+        // Process image URLs
+        if (data.thumbnailImage) {
+          data.thumbnailImage = this.processImageUrl(data.thumbnailImage);
+        }
+        if (data.images) {
+          data.images = data.images.map((img: string) => this.processImageUrl(img));
+        }
+        if (data.profileImage) {
+          data.profileImage = this.processImageUrl(data.profileImage);
+        }
+        this.loadVendors(data.vendorId);
+        // Patch Institute Details
+        this.instituteForm.patchValue({
+          programTitle: data.title || '',
+          instituteName: data.companyName || '',
+          since: data.sinceYear || '',
+          gstNo: data.gstNo || '',
+          introduction: data.description || '',
+          websiteName: data.website || '',
+          classLevel: data.classLevel || '',
+          instagramAccount: data.instagramAcc || '',
+          youtubeAccount: data.youtubeAcc || '',
+          // thumbnailImageFile: data.thumbnailImage, // handle image separately if needed
+        });
+        this.instituteDetailsData = this.instituteForm.value;
+        this.completedSections.instituteDetails = true;
+
+        // Patch Personal Details
+        
+        this.personalDetailsData = this.personalForm.value;
+        this.completedSections.personalDetails = true;
+
+        
+      
+        // Patch Class Details Table
+       this.classDetailsData = Array.isArray(data.classDetails)
+  ? data.classDetails.map((item: any) => {
+      const location = {
+        id: item.id || '',
+        address: item.address || '',
+        area: item.area || '',
+        city: item.city || '',
+        state: item.state || '',
+        country: item.country || '',
+        pincode: item.pincode || '',
+        latitude: item.latitude || '',
+        longitude: item.longitude || '',
+        road: item.road || ''
+      };
+
+      const contact = {
+  id: item.id || '', // Optional: if you have unique IDs per contact
+  tutorFirstName: item.tutorFirstName || '',
+  tutorLastName: item.tutorLastName || '',
+  tutorCountryCode: item.tutorCountryCode || '',
+  tutorPhoneNo: item.tutorPhoneNo || '',
+  whatsappCountryCode: item.whatsappCountryCode || '',
+  whatsappNo: item.whatsappNo || '',
+  tutorIntro: item.tutorIntro || '',
+  tutorEmailID: item.tutorEmailID || '',
+  contactType: {
+    primary: true,
+    secondary: false,
+    billing: false
+  }
+};
+
+      // ✅ Push to savedLocations if not already present
+      if (!this.savedLocations.some(loc => this.compareLocations(loc, location))) {
+        this.savedLocations.push(location);
+      }
+
+            if (!this.savedContacts.some(ct => this.compareContacts(ct, contact))) {
+        this.savedContacts.push(contact);
+      }
+
+      return {
+        ...item,
+        className: item.className || item.title || '',
+        weekdays: item.day ? item.day.split(',') : [],
+        gender:item.gender=='All'?'both': item.gender,
+        fromage: item.ageFrom ? parseInt(item.ageFrom) : 0,
+        toage: item.ageTo ? parseInt(item.ageTo) : 0,
+        fromcost: item.fromPrice ? parseInt(item.fromPrice) : 0,
+        tocost: item.toPrice ? parseInt(item.toPrice) : 0,
+        type: item.isOffline || 'Offline',
+        location: location,
+        contact: contact
+      };
+    })
+  : [];
+        if (this.classDetailsData.length > 0) {
+          this.activeAccordion = 'item-2';
+          this.completedSections.classDetails = true;
+        }
+        // Patch Course Details Table
+        this.courseDetailsData = Array.isArray(data.courseDetails)
+          ? data.courseDetails.map((item: any) => ({
+            ...item,
+            courseName: item.courseName || item.title || '', // Map title to courseName if courseName is missing
+            weekdays: item.day ? item.day.split(',') : [], // Convert day string to array
+          }))
+          : [];
+        if (this.courseDetailsData.length > 0) {
+          this.activeAccordion = 'item-3';
+          this.completedSections.classDetails = true;
+        }
+
+        // Patch Images
+        this.imageUrls = Array.isArray(data.images) ? data.images : [];
+        this.profileImagePreview = data.profileImage || null;
+
+        // Set thumbnail if available
+        if (data.thumbnailImage) {
+          this.imageUrls.unshift(data.thumbnailImage);
+          this.selectedThumbnailIndex = 0;
+        }
+
+        // Open all relevant accordions if data exists
+        if (this.personalDetailsData) this.activeAccordion = 'item-0';
+        if (this.instituteDetailsData) this.activeAccordion = 'item-1';
+        if (this.classDetailsData.length > 0) this.activeAccordion = 'item-2';
+        if (this.courseDetailsData.length > 0) this.activeAccordion = 'item-3';
+
+        // Set flags
+        this.activeAccordion = 'item-0';
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching activity details:', error);
+        this.isLoading = false;
+        this.toastr.error('Error loading activity details', 'Error');
+      }
+    });
+  }
 
   private loadSavedData() {
     const savedPersonalDetails = localStorage.getItem('personalDetails');
@@ -327,7 +410,7 @@ if (this.courseDetailsData.length > 0) {
     }
 
     const canOpen = (
-      value === 'item-0' || 
+      value === 'item-0' ||
       (value === 'item-1' && this.completedSections.personalDetails) ||
       (value === 'item-2' && this.completedSections.instituteDetails) ||
       (value === 'item-4' && this.completedSections.instituteDetails) ||
@@ -430,17 +513,19 @@ if (this.courseDetailsData.length > 0) {
     }
   }
 
-  handleWeekdayChange(day: string, isClassForm: boolean = true) {
-    const form = isClassForm ? this.classForm : this.courseForm;
-    const currentWeekdays = form.get('weekdays')?.value || [];
-    
-    if (currentWeekdays.includes(day)) {
-      const updated = currentWeekdays.filter((d: string) => d !== day);
-      form.patchValue({ weekdays: updated });
-    } else {
-      form.patchValue({ weekdays: [...currentWeekdays, day] });
-    }
+
+
+handleWeekdayChange(day: string, isClassForm: boolean = true) {
+  const form = isClassForm ? this.classForm : this.courseForm;
+  const currentWeekdays = form.get('weekdays')?.value || [];
+
+  if (currentWeekdays.includes(day)) {
+    const updated = currentWeekdays.filter((d: string) => d !== day);
+    form.patchValue({ weekdays: updated });
+  } else {
+    form.patchValue({ weekdays: [...currentWeekdays, day] });
   }
+}
 
   savePersonalDetails() {
     if (this.personalForm.invalid) {
@@ -459,7 +544,7 @@ if (this.courseDetailsData.length > 0) {
       const formData = this.personalForm.value;
       this.personalDetailsData = formData;
       localStorage.setItem('personalDetails', JSON.stringify(formData));
-      
+
       this.completedSections.personalDetails = true;
       this.activeAccordion = 'item-1';
       this.toastr.success('Personal details saved successfully');
@@ -488,7 +573,7 @@ if (this.courseDetailsData.length > 0) {
       const formData = this.instituteForm.value;
       this.instituteDetailsData = formData;
       localStorage.setItem('instituteDetails', JSON.stringify(formData));
-      
+
       this.completedSections.instituteDetails = true;
       this.activeAccordion = 'item-2';
       this.toastr.success('Institute details saved successfully');
@@ -674,17 +759,10 @@ if (this.courseDetailsData.length > 0) {
       }
     });
 
-    // Add class and course details
-    const classDetails = this.classDetailsData.map(item => ({
-      ...item,
-      id: 0,
-      activityId: 0
-    }));
 
-    const courseDetails = this.courseDetailsData.map(item => ({
+    const classDetails = mapToApiFormat(this.classDetailsData);
+    const courseDetails = mapToApiFormat(this.courseDetailsData).map(item => ({
       ...item,
-      id: 0,
-      activityId: 0,
       startDate: new Date().toISOString().split('T')[0],
       endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     }));
@@ -694,13 +772,13 @@ if (this.courseDetailsData.length > 0) {
     formData.append('activity.id', '0');
 
     this.activityService.registerVendor(formData).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         this.username = response.username;
         this.isSuccessPopupOpen = true;
         this.isPreviewOpen = false;
         this.toastr.success('Registration completed successfully!');
       },
-      error: (error:any) => {
+      error: (error: any) => {
         console.error('API Error:', error);
         this.toastr.error(error.message || 'An error occurred during registration');
       },
@@ -708,15 +786,35 @@ if (this.courseDetailsData.length > 0) {
         this.isLoading = false;
       }
     });
+    this.isLoading = false;
   }
 
   handleEditClass(index: number) {
-    const classToEdit = this.classDetailsData[index];
-    if (classToEdit) {
-      this.classForm.patchValue(classToEdit);
+    this.classToEdit = this.classDetailsData[index];
+    if (this.classToEdit) {
+      this.classForm.patchValue({
+        ...this.classToEdit,
+        timingsFrom: this.classToEdit.timingsFrom || '12:00',
+        timingsTo: this.classToEdit.timingsTo || '13:00',
+
+        subCategory: this.classToEdit.subCategoryID,
+      });
+
+
       this.editingIndex = index;
       this.showClassFields = true;
       this.activeAccordion = 'item-2';
+      console.log('Editing class:', this.classToEdit);
+      if (this.subcategories.length && this.classToEdit.subCategoryID) {
+        this.setSubCategoryForClass(this.classToEdit);
+      }
+    }
+  }
+
+  setSubCategoryForClass(item: any) {
+    const selectedSubCategory = this.subcategories.find((cat: any) => cat.id == item.subCategoryID);
+    if (selectedSubCategory) {
+      this.classForm.patchValue({ subCategory: selectedSubCategory.id, category: selectedSubCategory.categoryId }); // Reset subcategory
     }
   }
 
@@ -734,52 +832,52 @@ if (this.courseDetailsData.length > 0) {
     this.deleteMessage = 'Are you sure you want to delete this class?';
     this.isDeleteOpen = true;
     const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
-                  centered: true,
-                  backdrop: 'static'
-                });
-                
-                modalRef.componentInstance.title = 'Delete Class';
-                modalRef.componentInstance.message = this.deleteMessage ;
-                
-                modalRef.result.then(
-                  (result) => {
-                    if (result === 'delete') {
-                      // Handle delete action here
-                      this.classDetailsData.splice(index, 1);
-      this.toastr.success('Class deleted successfully');
-                    }
-                  },
-                  (reason) => {
-                    // Modal dismissed
-                    console.log('Modal dismissed');
-                  }
-                );
+      centered: true,
+      backdrop: 'static'
+    });
+
+    modalRef.componentInstance.title = 'Delete Class';
+    modalRef.componentInstance.message = this.deleteMessage;
+
+    modalRef.result.then(
+      (result) => {
+        if (result === 'delete') {
+          // Handle delete action here
+          this.classDetailsData.splice(index, 1);
+          this.toastr.success('Class deleted successfully');
+        }
+      },
+      (reason) => {
+        // Modal dismissed
+        console.log('Modal dismissed');
+      }
+    );
   }
 
   handleDeleteCourse(index: number) {
     this.deleteMessage = 'Are you sure you want to delete this course?';
     this.isDeleteOpen = true;
     const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
-                  centered: true,
-                  backdrop: 'static'
-                });
-                
-                modalRef.componentInstance.title = 'Delete Course';
-                modalRef.componentInstance.message = this.deleteMessage ;
-                
-                modalRef.result.then(
-                  (result) => {
-                    if (result === 'delete') {
-                      // Handle delete action here
-                      this.courseDetailsData.splice(index, 1);
-      this.toastr.success('Course deleted successfully');
-                    }
-                  },
-                  (reason) => {
-                    // Modal dismissed
-                    console.log('Modal dismissed');
-                  }
-                );
+      centered: true,
+      backdrop: 'static'
+    });
+
+    modalRef.componentInstance.title = 'Delete Course';
+    modalRef.componentInstance.message = this.deleteMessage;
+
+    modalRef.result.then(
+      (result) => {
+        if (result === 'delete') {
+          // Handle delete action here
+          this.courseDetailsData.splice(index, 1);
+          this.toastr.success('Course deleted successfully');
+        }
+      },
+      (reason) => {
+        // Modal dismissed
+        console.log('Modal dismissed');
+      }
+    );
   }
 
   handleCopyClass(index: number) {
@@ -888,7 +986,8 @@ if (this.courseDetailsData.length > 0) {
     modalRef.result.then((result: any) => {
       if (result === 'confirm') {
         this.isPreviewOpen = false;
-        this.submitAllData();
+        // this.submitAllData();
+        this.handleSubmitAfterPreview();
       }
     }, () => {
       this.isPreviewOpen = false;
@@ -908,12 +1007,12 @@ if (this.courseDetailsData.length > 0) {
 
   handleDeleteLocation(index: number) {
     this.savedLocations = this.savedLocations.filter((_, i) => i !== index);
-    
+
     // Reset form location if deleted location was selected
-    const currentLocation = this.showClassFields ? 
-      this.classForm.get('location')?.value : 
+    const currentLocation = this.showClassFields ?
+      this.classForm.get('location')?.value :
       this.courseForm.get('location')?.value;
-      
+
     if (currentLocation && currentLocation.id === this.savedLocations[index].id) {
       const form = this.showClassFields ? this.classForm : this.courseForm;
       form.patchValue({ location: null });
@@ -922,12 +1021,12 @@ if (this.courseDetailsData.length > 0) {
 
   handleDeleteContact(index: number) {
     this.savedContacts = this.savedContacts.filter((_, i) => i !== index);
-    
+
     // Reset form contact if deleted contact was selected
-    const currentContact = this.showClassFields ? 
-      this.classForm.get('contact')?.value : 
+    const currentContact = this.showClassFields ?
+      this.classForm.get('contact')?.value :
       this.courseForm.get('contact')?.value;
-      
+
     if (currentContact && currentContact.id === this.savedContacts[index].id) {
       const form = this.showClassFields ? this.classForm : this.courseForm;
       form.patchValue({ contact: null });
@@ -941,15 +1040,15 @@ if (this.courseDetailsData.length > 0) {
       if (locationData) {
         this.handleLocationSubmit(locationData);
       }
-    }, () => {});
+    }, () => { });
   }
 
   openContactPopup() {
-      const modalRef = this.modalService.open(AddContactPopupComponent, { size: 'lg' });
-  modalRef.componentInstance.profileDetails = this.personalForm.value;
-  modalRef.componentInstance.submit.subscribe((contactData: any) => {
-    this.handleContactSubmit(contactData);
-  });
+    const modalRef = this.modalService.open(AddContactPopupComponent, { size: 'lg' });
+    modalRef.componentInstance.profileDetails = this.personalForm.value;
+    modalRef.componentInstance.submit.subscribe((contactData: any) => {
+      this.handleContactSubmit(contactData);
+    });
   }
 
   closeLocationPopup() {
@@ -972,7 +1071,7 @@ if (this.courseDetailsData.length > 0) {
   onTypeChange() {
     const form = this.showClassFields ? this.classForm : this.courseForm;
     const type = form.get('type')?.value;
-    
+
     if (type === 'Online') {
       form.get('location')?.clearValidators();
       form.get('location')?.updateValueAndValidity();
@@ -993,6 +1092,18 @@ if (this.courseDetailsData.length > 0) {
     }
   }
 
+  compareLocations(a: any, b: any): boolean {
+    return a.address === b.address &&
+      a.area === b.area &&
+      a.city === b.city &&
+      a.state === b.state &&
+      a.pincode === b.pincode;
+  }
+
+  compareContacts(a: Contact, b: Contact): boolean {
+    return a.tutorPhoneNo === b.tutorPhoneNo && a.tutorEmailID === b.tutorEmailID;
+  }
+
   getLocationFormatted(location: LocationData): string {
     if (!location) return '';
     return `${location.address}, ${location.area}, ${location.city}, ${location.state}, ${location.country} - ${location.pincode}`;
@@ -1004,55 +1115,90 @@ if (this.courseDetailsData.length > 0) {
   }
 
   onClassCategoryChange() {
-  const selectedId = this.classForm.get('category')?.value;
-  this.classSubcategories = this.subcategories.filter(sub => sub.categoryId == selectedId);
-  this.classForm.get('subCategory')?.setValue('');
-}
-
-onCourseCategoryChange() {
-  const selectedId = this.courseForm.get('category')?.value;
-  this.courseSubcategories = this.subcategories.filter(sub => sub.categoryId == selectedId);
-  this.courseForm.get('subCategory')?.setValue('');
-}
-
-removeProfileImage() {
-  this.profileImagePreview = null;
-  this.personalForm.patchValue({ profileImageFile: null });
-  if (this.profileImageInput) {
-    this.profileImageInput.nativeElement.value = '';
+    const selectedId = this.classForm.get('category')?.value;
+    this.classSubcategories = this.subcategories.filter(sub => sub.categoryId == selectedId);
+    this.classForm.get('subCategory')?.setValue('');
   }
-}
 
-openAddDetailsModal() {
-  this.modalService.open(this.addDetailsmodal, { size: 'md', centered: true });
-}
-
-selectAddDetails(type: 'class' | 'course', modal: any) {
-  modal.close();
-  this.showClassFields = type === 'class';
-  this.showCourseFields = type === 'course';
-  if(type=== 'class') {
-    this.activeAccordion = 'item-2';
-  } else {
-    this.activeAccordion = 'item-3';
+  onCourseCategoryChange() {
+    const selectedId = this.courseForm.get('category')?.value;
+    this.courseSubcategories = this.subcategories.filter(sub => sub.categoryId == selectedId);
+    this.courseForm.get('subCategory')?.setValue('');
   }
-}
 
-    private processImageUrl(url: string): string {
-        if (!url) return '';
-        
-        // If the URL is already absolute, return it as is
-        if (url.startsWith('http://') || url.startsWith('https://')) {
-            return url;
-        }
-        
-        // If the URL is relative, prepend the API base URL
-        return `${environment.imageUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  removeProfileImage() {
+    this.profileImagePreview = null;
+    this.personalForm.patchValue({ profileImageFile: null });
+    if (this.profileImageInput) {
+      this.profileImageInput.nativeElement.value = '';
     }
+  }
+
+  openAddDetailsModal() {
+    this.modalService.open(this.addDetailsmodal, { size: 'md', centered: true });
+  }
+
+  selectAddDetails(type: 'class' | 'course', modal: any) {
+    modal.close();
+    this.showClassFields = type === 'class';
+    this.showCourseFields = type === 'course';
+    if (type === 'class') {
+      this.activeAccordion = 'item-2';
+    } else {
+      this.activeAccordion = 'item-3';
+    }
+  }
+
+  private processImageUrl(url: string): string {
+    if (!url) return '';
+
+    // If the URL is already absolute, return it as is
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+
+    // If the URL is relative, prepend the API base URL
+    return `${environment.imageUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
 }
 
 
-
+const mapToApiFormat = (data: ClassCourseDetails[]): any[] => {
+  return data.map(item => ({
+    id: 0,
+    activityId: 0,
+    title: item.className || item.title,
+    subCategoryID: item.subCategoryID,
+    categoryID: item.categoryID,
+    timingsFrom: item.timingsFrom,
+    timingsTo: item.timingsTo,
+    day: item.weekdays.join(','), // convert array to string
+    type: item.type,
+    ageFrom: item.ageFrom,
+    ageTo: item.ageTo,
+    sessionFrom: item.sessionFrom,
+    sessionTo: item.sessionTo,
+    gender: item.gender,
+    fromPrice: item.fromPrice,
+    toPrice: item.toPrice,
+    address: item.location.address,
+    road: item.location.road,
+    area: item.location.area,
+    city: item.location.city,
+    state: item.location.state,
+    country: item.location.country,
+    pincode: item.location.pincode,
+    latitude: item.location.latitude || '',
+    longitude: item.location.longitude || '',
+    tutorFirstName: item.contact.tutorFirstName,
+    tutorLastName: item.contact.tutorLastName,
+    tutorEmailID: item.contact.tutorEmailID,
+    tutorPhoneNo: item.contact.tutorPhoneNo,
+    tutorCountryCode: item.contact.tutorCountryCode,
+    whatsappCountryCode: item.contact.whatsappCountryCode,
+    tutorIntro: item.contact.tutorIntro || ''
+  }));
+};
 
 export class CustomValidators {
   static ageValidator(): ValidatorFn {

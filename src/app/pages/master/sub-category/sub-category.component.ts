@@ -3,6 +3,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { forkJoin } from 'rxjs';
+import { ToastrMessageService } from 'src/app/core/services/toastr-message.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { ActionButtonsColumnComponent } from 'src/app/shared/action-buttons-column/action-buttons-column.component';
 import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
@@ -12,38 +16,27 @@ import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirma
 })
 export class SubCategoryComponent {
    public columnDefs: ColDef[] = [
-    { field: 'id', headerName: 'CID', sortable: true, filter: true },
-    { field: 'categoryName', headerName: 'Category Name', sortable: true, filter: true },
-    { field: 'subCategoryName', headerName: 'Subcategory Name', sortable: true, filter: true },
-    { 
-      field: 'status', 
-      headerName: 'Status',
-      cellRenderer: (params: any) => {
-        return `<span class="badge bg-success">Active</span>`;
-      }
-    },
-    { 
-      field: 'createdDate', 
-      headerName: 'Created Date',
-      sortable: true,
-      filter: true,
-      valueFormatter: (params) => {
-        return new Date(params.value).toLocaleDateString();
-      }
-    },
+    { valueGetter: "node.rowIndex + 1", headerName: 'Sr No.', sortable: true,width:10, filter: true },
+    { field: 'title', headerName: 'Subcategory Name', sortable: true, filter: true },
+        { field: 'categoryId', headerName: 'Category Name', sortable: true, filter: true,   valueGetter: (params) => {
+    const categoryId = params.data.categoryId;
+    const category = this.categoryList.find(c => c.id === categoryId);
+    return category?.title || 'Unknown';
+  }, },
+    
     {
+      width:20,
       field: 'action',
       headerName: 'Action',
-      cellRenderer: (params: any) => {
-        return `
-          <div class="d-flex gap-2">
-            <img src="assets/images/icons/Edit Square.png" width="16" height="16" class="edit-icon"/>
-            <img src="assets/images/icons/Delete 2.png" width="16" height="16" class="delete-icon"/>
-          </div>
-        `;
-      }
+      cellRenderer: 'actionCellRenderer'
     }
   ];
+
+  context = { componentParent: this };
+
+  frameworkComponents = {
+  actionCellRenderer: ActionButtonsColumnComponent
+};
 
   public defaultColDef: ColDef = {
     flex: 1,
@@ -51,10 +44,11 @@ export class SubCategoryComponent {
     resizable: true,
   };
 
-  public rowData: any[] = [{id: 1, categoryName: 'Music', subCategoryName: 'Tabla', status: 'Active', createdDate: '2023-10-01'}];
+  public rowData: any[] = [];
+    public categoryList: any[] = [];
   public isLoading = false;
 
-  constructor(private router: Router,private modalService: NgbModal) {}
+  constructor(private router: Router,private modalService: NgbModal, private categoryService: CategoryService,private toastr: ToastrMessageService) {}
 
   ngOnInit() {
     this.loadCategories();
@@ -63,7 +57,15 @@ export class SubCategoryComponent {
   loadCategories() {
     this.isLoading = true;
     // Replace this with your actual API call
-    // this.categoryService.getCategories().subscribe(...)
+    
+
+    forkJoin([
+    this.categoryService.getSubCategories(),
+    this.categoryService.getCategories()  // your actual rowData
+  ]).subscribe(([subcategories, categories]) => {
+    this.rowData = subcategories;
+    this.categoryList = categories;
+  });
     this.isLoading = false;
   }
 
@@ -71,32 +73,47 @@ export class SubCategoryComponent {
     params.api.sizeColumnsToFit();
   }
 
-  onCellClicked(event: any) {
-    if (event.event.target.classList.contains('edit-icon')) {
-      this.router.navigate(['/masters/subcategory-edit', event.data.id]);
-    } else if (event.event.target.classList.contains('delete-icon')) {
-      const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
-        centered: true,
-        backdrop: 'static'
-      });
+
+
+  onEdit(rowData: any) {
+  this.router.navigate(['/masters/subcategory-edit', rowData.id]);
+}
+
+onDelete(rowData: any) {
+        const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
+              centered: true,
+              backdrop: 'static'
+            });
+            
+            modalRef.componentInstance.title = 'Delete SubCategory';
+            modalRef.componentInstance.message = `Are you sure you want to delete SubCategory "${rowData.title}"?`;
+            
+            modalRef.result.then(
+              (result) => {
+                if (result === 'delete') {
+                  // Handle delete action here
+                      this.categoryService.deleteSubCategory(rowData.id).subscribe({
+                        next: (data:any) => {
+                this.toastr.showSuccess('SubCategory Deleted Successfully','Delete');
+                this.loadCategories();
+            },
+            error: (error:any) => {
+                this.isLoading = false;
+                this.toastr.showError('Error Deleting Category', 'Error');
+            }
       
-      modalRef.componentInstance.title = 'Delete Subcategory';
-      modalRef.componentInstance.message = `Are you sure you want to delete subcategory "${event.data.subCategoryName}"?`;
-      
-      modalRef.result.then(
-        (result) => {
-          if (result === 'delete') {
-            // Handle delete action here
-            console.log('Deleting subcategory:', event.data.id);
-            // Call your delete API
-          }
-        },
-        (reason) => {
-          // Modal dismissed
-          console.log('Modal dismissed');
-        }
-      );
-    }
-  
-  }
+    })
+                }
+              },
+              (reason) => {
+                // Modal dismissed
+                console.log('Modal dismissed');
+              }
+            );
+}
+
+resolvecategoryName(id:any):string{
+  const category = this.categoryList.find(c => c.id === id);
+  return category?.title || 'Unknown';
+}
 }

@@ -36,18 +36,18 @@ export const MENU: MenuItem[] = [
   //   icon: 'assets/images/sidebar/Attendance.png',
   //   link: '/',
   // },
-  {
-    id: 7,
-    label: 'Vendors (Super Admin Access)',
-    icon: 'assets/images/sidebar/user-pen.png',
-    link: '/vendors',
-  },
-  {
-    id: 4,
-    label: 'Users',
-    icon: 'assets/images/sidebar/Student-history.png',
-    link: '/users',
-  },
+  // {
+  //   id: 7,
+  //   label: 'Vendors (Super Admin Access)',
+  //   icon: 'assets/images/sidebar/user-pen.png',
+  //   link: '/vendors',
+  // },
+  // {
+  //   id: 4,
+  //   label: 'Users',
+  //   icon: 'assets/images/sidebar/Student-history.png',
+  //   link: '/users',
+  // },
     {
     id: 8,
     label: 'Masters',

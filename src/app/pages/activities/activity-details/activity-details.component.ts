@@ -28,33 +28,33 @@ export class ActivityDetailsComponent {
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            this.vendorId = +params['id'];
-            this.fetchVendorActivities();
+            const activityId = +params['id'];
+            this.fetchActivityDetails(activityId);
         });
     }
 
-    fetchVendorActivities() {
-        if (!this.vendorId) return;
+    // fetchVendorActivities() {
+    //     if (!this.vendorId) return;
         
-        this.isLoading = true;
-        this.activityService.getVendorActivities(this.vendorId).subscribe({
-            next: (data) => {
-                this.vendorActivities = data;
-                if (data.length > 0) {
-                    // Fetch detailed information for the first activity
-                    this.fetchActivityDetails(data[0].id);
-                } else {
-                    this.isLoading = false;
-                    this.toastr.showWarning('No activities found for this vendor', 'Warning');
-                }
-            },
-            error: (error) => {
-                console.error('Error fetching vendor activities:', error);
-                this.isLoading = false;
-                this.toastr.showError('Error loading vendor activities', 'Error');
-            }
-        });
-    }
+    //     this.isLoading = true;
+    //     this.activityService.getVendorActivities(this.vendorId).subscribe({
+    //         next: (data) => {
+    //             this.vendorActivities = data;
+    //             if (data.length > 0) {
+    //                 // Fetch detailed information for the first activity
+    //                 this.fetchActivityDetails(data[0].id);
+    //             } else {
+    //                 this.isLoading = false;
+    //                 this.toastr.showWarning('No activities found for this vendor', 'Warning');
+    //             }
+    //         },
+    //         error: (error) => {
+    //             console.error('Error fetching vendor activities:', error);
+    //             this.isLoading = false;
+    //             this.toastr.showError('Error loading vendor activities', 'Error');
+    //         }
+    //     });
+    // }
 
     fetchActivityDetails(activityId: number) {
         this.isLoading = true;

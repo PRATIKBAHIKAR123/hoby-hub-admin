@@ -50,6 +50,7 @@ import { CropImagePopupComponent } from './crop-image-popup/crop-image-popup.com
 import {  ImageCropperModule } from 'ngx-image-cropper';
 import { PreviewPopupComponent } from './preview-popup/preview-popup.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ActionButtonsColumnComponent } from './action-buttons-column/action-buttons-column.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     DirectoryComponent,
     DeleteConfirmationModalComponent,
     CropImagePopupComponent,
-    PreviewPopupComponent
+    PreviewPopupComponent,
+    ActionButtonsColumnComponent
   ],
   imports: [
     CommonModule,

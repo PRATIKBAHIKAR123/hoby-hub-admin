@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { ToastrMessageService } from 'src/app/core/services/toastr-message.service';
+import { ActivityService } from 'src/app/services/activity.service';
+import { ActionButtonsColumnComponent } from 'src/app/shared/action-buttons-column/action-buttons-column.component';
 import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
@@ -11,136 +14,170 @@ import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirma
 })
 export class ActivitiesComponent {
 
-      selectedStatus: string = 'All';
+  selectedStatus: string = 'All';
+  searchTxt: string = '';
 
-    filterAds(status: string) {
-        this.selectedStatus = status;
-        if (status === 'All') {
-            // Load all ads
-            //this.loadAllAds();
-        } else {
-            // Filter ads by status
-            //this.loadFilteredAds(status);
-        }
+  filterAds(status: string) {
+    this.selectedStatus = status;
+    if (status === 'All') {
+      this.filterRowData = this.rowData;
+      this.gridApi!.setRowData(this.filterRowData);
+    } else {
+      // Filter ads by status
+      this.filterRowData = this.rowData.filter((ad: any) => ad.approved.toString() == status);
+      this.gridApi!.setRowData(this.filterRowData);
     }
 
-   public columnDefs: ColDef[] = [
-    { field: 'id', headerName: 'ID', sortable: true, filter: true },
-    { field: 'categoryName', headerName: 'Created By', sortable: true, filter: true },
-    { field: 'title', headerName: 'Title', sortable: true, filter: true },
-    { 
-      field: 'status', 
+
+  }
+
+  public columnDefs: ColDef[] = [
+    // { field: 'id', headerName: 'ID', sortable: true, filter: true },
+    { field: 'title', headerName: 'Title', sortable: true, filter: true, width: 380, },
+    {
+      field: 'type',
       headerName: 'Type',
+      width: 140,
     },
-        { field: 'title', headerName: 'Session', sortable: true, filter: true },
-            { field: 'title', headerName: 'Age', sortable: true, filter: true },
-                { field: 'title', headerName: 'Rate', sortable: true, filter: true },
-                    { field: 'title', headerName: 'City', sortable: true, filter: true },
-    { 
-      field: 'createdDate', 
+    { valueGetter: (params) => `${params.data.sessionCountFrom} - ${params.data.sessionCountTo}`, headerName: 'Session', sortable: true, filter: true, width: 180, },
+    { valueGetter: (params) => `${params.data.ageRestrictionFrom} - ${params.data.ageRestrictionTo}`, headerName: 'Age', sortable: true, filter: true },
+    { field: 'rate', headerName: 'Rate', sortable: true, filter: true },
+    { field: 'city', headerName: 'City', sortable: true, filter: true },
+    {
+      field: 'createdDate',
       headerName: 'Posted Date & Time',
       sortable: true,
       filter: true,
       valueFormatter: (params) => {
-        return new Date(params.value).toLocaleDateString();
+        return params.value ? new Date(params.value).toLocaleDateString() : '';
       }
     },
-    { 
-      field: 'createdDate', 
+    {
+      field: 'createdDate',
       headerName: 'Approved Date & Time',
       sortable: true,
       filter: true,
       valueFormatter: (params) => {
-        return new Date(params.value).toLocaleDateString();
+        return params.value ? new Date(params.value).toLocaleDateString() : '';
       }
     },
-    { 
-      field: 'status', 
+    {
+      field: 'approved',
       headerName: 'Status',
       cellRenderer: (params: any) => {
-        return `<span class="badge bg-success">Approved</span>`;
+        var div = `<span class="badge bg-warning">Pending</span>`;
+        if (params.value == 0) {
+          return div =`<span class="badge bg-warning">Pending</span>`;
+        }else if (params.value == 2) {
+          return div =`<span class="badge bg-danger">Rejected</span>`;
+        }else if (params.value == 3) {
+          return div =`<span class="badge bg-info">Approved</span>`;
       }
+      return div}
     },
     {
       field: 'action',
       headerName: 'Action',
-      cellRenderer: (params: any) => {
-        return `
-          <div class="d-flex gap-2 align-items-center">
-          <i width="16" height="16" class="ri ri-view"/>
-            <img src="assets/images/icons/Edit Square.png" width="16" height="16" class="edit-icon"/>
-            <img src="assets/images/icons/Delete 2.png" width="16" height="16" class="delete-icon"/>
-          </div>
-        `;
-      }
+      cellRenderer: 'actionCellRenderer'
     }
   ];
 
+  context = { componentParent: this };
+
+  frameworkComponents = {
+    actionCellRenderer: ActionButtonsColumnComponent
+  };
+
   public defaultColDef: ColDef = {
-    flex: 1,
-    minWidth: 100,
+    // flex: 1,
+    // minWidth: 100,
     resizable: true,
   };
 
-  public rowData: any[] = [{id: 1, categoryName: 'Music', subCategoryName: 'Tabla', status: 'Approved', createdDate: '2023-10-01'}];
+  gridApi: any;
+
+  public rowData: any[] = [];
+  public filterRowData: any[] = [];
   public isLoading = false;
 
-  constructor(private router: Router,private modalService: NgbModal) {}
+  constructor(private router: Router, private modalService: NgbModal, private activityService: ActivityService, private toastr: ToastrMessageService) { }
 
   ngOnInit() {
-    this.loadCategories();
+    this.loadActivities();
   }
 
   loadCategories() {
     this.isLoading = true;
     // Replace this with your actual API call
-    // this.categoryService.getCategories().subscribe(...)
+
+  }
+
+  loadActivities() {
+    this.isLoading = true;
+    //this.gridApi.showLoadingOverlay();
+    // Replace this with your actual API call
+    this.activityService.getVendorActivities(1).subscribe((data) => {
+      this.rowData = data;
+      this.filterRowData = data;
+      this.gridApi!.setRowData(this.rowData);
+    })
     this.isLoading = false;
   }
 
   onGridReady(params: GridReadyEvent) {
-    params.api.sizeColumnsToFit();
+    this.gridApi = params.api;
+    this.gridApi!.sizeColumnsToFit();
   }
 
-  onCellClicked(event: any) {
-    if (event.event.target.classList.contains('edit-icon')) {
-      
-      this.router.navigate(['/activities/activity-edit', event.data.id]);
-    } else if (event.event.target.classList.contains('delete-icon')) {
-      const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
-              centered: true,
-              backdrop: 'static'
-            });
-            
-            modalRef.componentInstance.title = 'Delete Category';
-            modalRef.componentInstance.message = `Are you sure you want to delete Category "${event.data.categoryName}"?`;
-            
-            modalRef.result.then(
-              (result) => {
-                if (result === 'delete') {
-                  // Handle delete action here
-                  console.log('Deleting Category:', event.data.id);
-                  // Call your delete API
-                }
-              },
-              (reason) => {
-                // Modal dismissed
-                console.log('Modal dismissed');
-              }
-            );
-    }
-    else  {
-this.router.navigate(['/activities/activity-details', event.data.id]);
-    }
+  onEdit(rowData: any) {
+    this.router.navigate(['activities/activity-edit', rowData.id]);
   }
 
-  
+  onRowClicked(event: any): void {
+    const selectedItem = event.data;
+    this.router.navigate(['activities/activity-details', selectedItem.id]);  // Example
+  }
 
-    onFilterTextBoxChanged() {
-      let gridApi: GridApi;
-  gridApi!.setGridOption(
-    "quickFilterText",
-    (document.getElementById("filter-text-box") as HTMLInputElement).value,
-  );
-}
+  onDelete(rowData: any) {
+    const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
+      centered: true,
+      backdrop: 'static'
+    });
+
+    modalRef.componentInstance.title = 'Delete Category';
+    modalRef.componentInstance.message = `Are you sure you want to delete Category "${rowData.title}"?`;
+
+    modalRef.result.then(
+      (result) => {
+        if (result === 'delete') {
+          // Handle delete action here
+          //                   this.activityService.deleteCategory(rowData.id).subscribe({
+          //                     next: (data:any) => {
+          //             this.toastr.showSuccess('Category Deleted Successfully','Delete');
+          //             this.loadCategories();
+          //         },
+          //         error: (error:any) => {
+          //             this.isLoading = false;
+          //             this.toastr.showError('Error Deleting Category', 'Error');
+          //         }
+
+          // })
+        }
+      },
+      (reason) => {
+        // Modal dismissed
+        console.log('Modal dismissed');
+      }
+    );
+  }
+
+  onFilterTextBoxChanged() {
+        if( this.searchTxt && this.searchTxt.trim() !== '') {
+      this.filterRowData = this.filterRowData.filter((ad: any) => ad.title.toLowerCase().includes(this.searchTxt.toLowerCase()));
+    }
+    else{
+      this.filterRowData = this.rowData;
+    }
+    this.gridApi!.setRowData(this.filterRowData);
+  }
 }

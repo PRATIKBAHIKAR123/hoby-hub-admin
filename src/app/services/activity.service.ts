@@ -34,7 +34,7 @@ export class ActivityService {
   constructor(private http: HttpClient) {}
 
   getVendorActivities(vendorId: number): Observable<Activity[]> {
-    return this.http.get<Activity[]>(`${environment.apiUrl}/admin/activity/get-all?vendorId=${vendorId}`);
+    return this.http.post<Activity[]>(`${environment.apiUrl}/admin/activity/get-all`,{});
   }
 
   approveActivity(activityId: number): Observable<any> {

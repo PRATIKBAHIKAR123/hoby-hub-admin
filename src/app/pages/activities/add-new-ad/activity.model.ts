@@ -56,7 +56,7 @@ export interface ClassCourseDetails {
   gender: string;
   fromPrice: number;
   toPrice: number;
-  location: Location;
+  location: LocationData;
   contact: Contact;
   weekdays: string[];
   experienceLevel: string;

@@ -295,7 +295,7 @@
               <label class="form-label">Sub Category<span class="text-danger">*</span></label>
               <select class="form-select" formControlName="subCategory" [disabled]="!classForm.get('category')?.value">
                 <option value="">Select Sub Category</option>
-                <option *ngFor="let sub of classSubcategories" [value]="sub.id">{{sub.title}}</option>
+                <option *ngFor="let sub of subcategories" [ngValue]="sub.id">{{sub.title}}</option>
               </select>
               <div class="invalid-feedback" *ngIf="classForm.get('subCategory')?.touched && classForm.get('subCategory')?.errors">
                 Sub Category is required
@@ -319,12 +319,15 @@
             <div class="col-md-4">
               <label class="form-label">Weekdays<span class="text-danger">*</span></label>
               <div class="d-flex flex-wrap gap-2">
-                <div *ngFor="let day of weekdays">
-                  <input type="checkbox" [id]="day" [checked]="classForm.get('weekdays')?.value?.includes(day)"
-                    (change)="handleWeekdayChange(day, true)">
-                  <label [for]="day" class="me-2 mr-2">{{day}}</label>
-                </div>
-              </div>
+  <div *ngFor="let day of weekdays" class="form-check">
+    <input type="checkbox"
+           class="form-check-input"
+           [id]="day.short"
+           [checked]="classForm.get('weekdays')?.value.includes(day.short)"
+           (change)="handleWeekdayChange(day.short)">
+    <label [for]="day.short" class="form-check-label">{{ day.full }}</label>
+  </div>
+</div>
               <div class="invalid-feedback" *ngIf="classForm.get('weekdays')?.touched && classForm.get('weekdays')?.errors">
                 At least one weekday required
               </div>
@@ -376,8 +379,16 @@
             </div>
             <!-- No. of Sessions -->
             <div class="col-md-2">
-              <label class="form-label">No. of Sessions</label>
-              <input type="number" class="form-control" formControlName="noOfSessions" min="1" placeholder="No. of Sessions">
+              <label class="form-label">Session From</label>
+              <input type="number" class="form-control" formControlName="sessionFrom" min="1" placeholder="No. of Sessions">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Session To</label>
+              <input type="number" class="form-control" formControlName="sessionTo" min="1" placeholder="No. of Sessions"
+              [ngClass]="{'is-invalid': classForm.hasError('sessionRange') && classForm.get('sessionTo')?.touched}">
+              <div class="invalid-feedback" *ngIf="classForm.hasError('sessionRange') && classForm.get('sessionTo')?.touched">
+                To Session must be greater than or equal to From Session
+              </div>
             </div>
             <!-- Type -->
             <div class="col-md-2">
@@ -480,12 +491,15 @@
             <div class="col-md-4">
               <label class="form-label">Weekdays<span class="text-danger">*</span></label>
               <div class="d-flex flex-wrap gap-2">
-                <div *ngFor="let day of weekdays">
-                  <input type="checkbox" [id]="'course-' + day" [checked]="courseForm.get('weekdays')?.value?.includes(day)"
-                    (change)="handleWeekdayChange(day, false)">
-                  <label [for]="'course-' + day" class="me-2">{{day}}</label>
-                </div>
-              </div>
+  <div *ngFor="let day of weekdays" class="form-check">
+    <input type="checkbox"
+           class="form-check-input"
+           [id]="day.short"
+           [checked]="classForm.get('weekdays')?.value.includes(day.short)"
+           (change)="handleWeekdayChange(day.short)">
+    <label [for]="day.short" class="form-check-label">{{ day.full }}</label>
+  </div>
+</div>
               <div class="invalid-feedback" *ngIf="courseForm.get('weekdays')?.touched && courseForm.get('weekdays')?.errors">
                 At least one weekday required
               </div>
@@ -536,9 +550,17 @@
               </select>
             </div>
             <!-- No. of Sessions -->
+             <div class="col-md-2">
+              <label class="form-label">Session From</label>
+              <input type="number" class="form-control" formControlName="sessionFrom" min="1" placeholder="No. of Sessions">
+            </div>
             <div class="col-md-2">
-              <label class="form-label">No. of Sessions</label>
-              <input type="number" class="form-control" formControlName="noOfSessions" min="1" placeholder="No. of Sessions">
+              <label class="form-label">Session To</label>
+              <input type="number" class="form-control" formControlName="sessionTo" min="1" placeholder="No. of Sessions"
+              [ngClass]="{'is-invalid': courseForm.hasError('sessionRange') && courseForm.get('sessionTo')?.touched}">
+              <div class="invalid-feedback" *ngIf="courseForm.hasError('sessionRange') && courseForm.get('sessionTo')?.touched">
+                To Session must be greater than or equal to From Session
+              </div>
             </div>
             <!-- Type -->
             <div class="col-md-2">
@@ -679,7 +701,7 @@
     <!-- Final Submit Button -->
     <div class="d-flex justify-content-center mt-4">
       <button class="btn btn-success px-5 py-2" (click)="handleFinalSubmit()" [disabled]="isLoading">
-        {{ isLoading ? "Submitting..." : "Submit Registration" }}
+        {{ activityId ? "Update Registration" : "Submit Registration" }}
       </button>
     </div>
   </div>

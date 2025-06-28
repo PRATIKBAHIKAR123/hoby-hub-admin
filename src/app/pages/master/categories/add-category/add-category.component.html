@@ -1,22 +1,22 @@
 <div>
     <div class="form-title">
-        Add New Category
+        {{catId? 'Edit ': 'Add New'}} Category
     </div>
     <div class="form-section">
         <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="col-6 mb-3">
                     <div>
-                        <label for="categoryName" class="form-label">Category Name</label>
+                        <label for="title" class="form-label">Category Name</label>
                         <input 
                             type="text" 
                             class="form-control" 
-                            id="categoryName"
-                            formControlName="categoryName"
-                            [ngClass]="{ 'is-invalid': submitted && f['categoryName'].errors }"
+                            id="title"
+                            formControlName="title"
+                            [ngClass]="{ 'is-invalid': submitted && f['title'].errors }"
                             placeholder="Category Name">
-                        <div *ngIf="submitted && f['categoryName'].errors" class="invalid-feedback">
-                            <div *ngIf="f['categoryName'].errors['required']">Category name is required</div>
+                        <div *ngIf="submitted && f['title'].errors" class="invalid-feedback">
+                            <div *ngIf="f['title'].errors['required']">Category name is required</div>
                         </div>
                     </div>
                 </div>
@@ -38,25 +38,29 @@
                 <div class="col-6 mb-3">
                     <div>
                         <label for="imagePath" class="form-label">Image path</label>
-                        <input 
-                            type="file" 
-                            class="form-control" 
-                            id="imagePath"
-                            formControlName="imagePath"
-                            [ngClass]="{ 'is-invalid': submitted && f['imagePath'].errors }"
-                            placeholder="Image">
-                        <div *ngIf="submitted && f['imagePath'].errors" class="invalid-feedback">
-                            <div *ngIf="f['imagePath'].errors['required']">Image is required</div>
-                        </div>
+    <input
+      type="file"
+      class="form-control"
+      id="imagePath"
+      accept="image/*"
+      [ngClass]="{ 'is-invalid': submitted && (f['imagePath'].errors || !catImage) }"
+      (change)="onFileSelected($event)">
+    <div *ngIf="submitted && (f['imagePath'].errors || !catImage)" class="invalid-feedback">
+      <div *ngIf="f['imagePath'].errors?.['required'] || !catImage">Image is required</div>
+    </div>
+    
                     </div>
+                    <div class="relative">
+        <img src="{{catImagePathReceived}}" height="240" alt="Category"/>
+    </div>
                 </div>
             </div>
             <div class="text-end flex mt-2 gap-2">
                 <button type="button" class="btn btn-outline-primary m-2" (click)="onCancel()">
-                    <span>Cancel</span>
+                    <span>Clear</span>
                 </button>
                 <button type="submit" class="btn btn-primary waves-effect waves-light ml-2">
-                    <span>Submit</span>
+                    <span>{{catId? 'Update ': 'Submit'}}</span>
                 </button>
             </div>
         </form>

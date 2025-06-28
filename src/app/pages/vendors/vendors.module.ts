@@ -6,6 +6,10 @@ import { NgbPaginationModule, NgbModalModule, NgbCarouselModule } from '@ng-boot
 import { RouterModule, Routes } from '@angular/router';
 import { AddVendorComponent } from './vendors/add-vendor/add-vendor.component';
 import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const routes: Routes = [
   {
@@ -17,7 +21,7 @@ const routes: Routes = [
     component: AddVendorComponent
   },
   {
-    path: ":id",
+    path: "edit:id",
     component: VendorDetailsComponent
   }
 ];
@@ -32,6 +36,7 @@ const routes: Routes = [
     SharedModule,
     CommonModule,
     NgbPaginationModule,
+    AgGridModule,
     NgbModalModule,
     NgbCarouselModule,
     RouterModule.forChild(routes)

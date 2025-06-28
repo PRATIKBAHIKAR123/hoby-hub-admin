@@ -17,12 +17,12 @@
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
+            [components]="frameworkComponents"
+            [context]="context"
             [theme]="'legacy'"
-            [pagination]="true"
-            [paginationPageSize]="10"
             [rowSelection]="'single'"
             (gridReady)="onGridReady($event)"
-            (cellClicked)="onCellClicked($event)"
+            
             >
         </ag-grid-angular>
     </div>

@@ -27,7 +27,7 @@ export class AddLocationPopupComponent implements OnInit, AfterViewInit {
       iconSize: [ 25, 41 ],
       iconAnchor: [ 13, 0 ],
       // specify the path here
-      iconUrl: 'assets/images/icons/marker.png',
+      iconUrl: '/assets/images/icons/marker 2.png',
    })
 };
 
@@ -39,7 +39,7 @@ export class AddLocationPopupComponent implements OnInit, AfterViewInit {
       })
     ],
     zoom: 13,
-    center: latLng(19.076, 72.8777) // Default to Mumbai
+    center: latLng(18.52890, 73.8745) // Default to Mumbai
   };
   leafletMap!: Map;
   leafletMarker!: Marker;

@@ -120,7 +120,8 @@
                 }
 
                 &[aria-expanded=true] {
-                    color: var(#FFF);
+                    color: #05244f;
+                    background: transparent;
 
                     .icon-dual {
                         color: var(--#{$prefix}vertical-menu-item-hover-color);

@@ -2,41 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ActionButtonsColumnComponent } from 'src/app/shared/action-buttons-column/action-buttons-column.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrMessageService } from 'src/app/core/services/toastr-message.service';
+import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirmation-modal/delete-confirmation-modal.component';
+import { VendorService } from 'src/app/services/vendor.service';
 
-interface Vendor {
-  id: number;
-  name: string;
-  email: string | null;
-  phoneNumber: string;
-  createdDate: string;
-  // New fields for redesigned UI
-  title?: string;
-  subtitle?: string;
-  sinceYear?: string;
-  description?: string;
-  profileImageUrl?: string;
-  galleryImages?: string[];
-  ageRestriction?: string;
-  session?: string;
-  rate?: string;
-  language?: string;
-  classes?: {
-    type: string;
-    weekDay: string;
-    time: string;
-    age: string;
-    session: string;
-    gender: string;
-    price: string;
-  }[];
-  institute?: string;
-  hhId?: string;
-  intro?: string;
-  website?: string;
-  whatsapp?: string;
-  address?: string;
-  addressUrl?: string;
-}
+
 
 @Component({
   selector: 'app-vendors',
@@ -44,71 +17,90 @@ interface Vendor {
   styleUrls: ['./vendors.component.scss']
 })
 export class VendorsComponent implements OnInit {
-  // Preserving existing table data as commented code
-  /*
-  tableData = [
+   public columnDefs: ColDef[] = [
+    { field: 'id', headerName: 'ID', sortable: true,width:10, filter: true },
+    { field: 'name', headerName: 'Vendor Name', sortable: true, filter: true },
+    { field: 'email', headerName: 'Email',width:20, sortable: true, filter: true },
+    { field: 'phoneNumber', headerName: 'Phone',width:20, sortable: true, filter: true },
     {
-      id: '24578164',
-      title: 'Bessie Cooper',
-      location: 'Pune',
-      img: 'assets/images/tableTemp/PRImage.png',
-      status: 'Active',
-      approvedDate: '2024-06-15',
-      expiryDate: '2024-06-15',
-      lastRenewalDate: '2025-01-10',
-    },
-    // ... rest of the existing data
+      width:20,
+      field: 'action',
+      headerName: 'Action',
+      cellRenderer: 'actionCellRenderer'
+    }
   ];
-  */
 
-  vendors: Vendor[] = [];
-  isLoading = true;
-  
-  // Pagination properties
-  currentPage = 1;
-  itemsPerPage = 10;
-  totalItems = 0;
-  paginatedVendors: Vendor[] = [];
+  context = { componentParent: this };
 
-  constructor(private http: HttpClient, private router: Router) {}
+  frameworkComponents = {
+  actionCellRenderer: ActionButtonsColumnComponent
+};
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    resizable: true,
+  };
+
+  public rowData: any[] = [];
+  public isLoading = false;
+
+  constructor(private router: Router,private modalService: NgbModal, private vendorService: VendorService,private toastr: ToastrMessageService) {}
 
   ngOnInit() {
-    this.fetchVendors();
+    this.loadVendors();
   }
 
-  fetchVendors() {
+  loadVendors() {
     this.isLoading = true;
-    this.http.get<Vendor[]>(`${environment.apiUrl}/admin/vendor/get-all`)
-      .subscribe({
-        next: (data) => {
-          this.vendors = data;
-          this.totalItems = data.length;
-          this.updatePaginatedData();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching vendors:', error);
-          this.isLoading = false;
-        }
-      });
+    // Replace this with your actual API call
+    this.vendorService.getVendorList().subscribe((data)=>{
+      console.log(data)
+      this.rowData = data;
+    })
+    this.isLoading = false;
   }
 
-  onPageChange(page: number) {
-    this.currentPage = page;
-    this.updatePaginatedData();
+  onGridReady(params: GridReadyEvent) {
+    params.api.sizeColumnsToFit();
   }
 
-  private updatePaginatedData() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedVendors = this.vendors.slice(startIndex, endIndex);
-  }
 
-  navigateToVendorDetails(vendorId: number) {
-    const vendor = this.vendors.find(v => v.id === vendorId);
-    if (vendor) {
-      localStorage.setItem('currentVendor', JSON.stringify(vendor));
-    }
-    this.router.navigate(['/vendors', vendorId]);
-  }
+
+  onEdit(rowData: any) {
+  this.router.navigate(['/vendors/edit', rowData.id]);
+}
+
+onDelete(rowData: any) {
+        const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
+              centered: true,
+              backdrop: 'static'
+            });
+            
+            modalRef.componentInstance.title = 'Delete Vendor';
+            modalRef.componentInstance.message = `Are you sure you want to delete Vendor "${rowData.name}"?`;
+            
+            modalRef.result.then(
+              (result) => {
+                if (result === 'delete') {
+                  // Handle delete action here
+    //                   this.vendorService.deleteCategory(rowData.id).subscribe({
+    //                     next: (data:any) => {
+    //             this.toastr.showSuccess('Vendor Deleted Successfully','Delete');
+    //             this.loadVendors();
+    //         },
+    //         error: (error:any) => {
+    //             this.isLoading = false;
+    //             this.toastr.showError('Error Deleting Vendor', 'Error');
+    //         }
+      
+    // })
+                }
+              },
+              (reason) => {
+                // Modal dismissed
+                console.log('Modal dismissed');
+              }
+            );
+}
 }

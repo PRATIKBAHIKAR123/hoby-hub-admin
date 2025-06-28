@@ -19,19 +19,19 @@
         <input type="radio" class="btn-check" name="statusFilter" id="all" [value]="'All'" [(ngModel)]="selectedStatus" (change)="filterAds('All')" checked>
         <label class="btn btn-outline-primary" for="all">All Ads</label>
 
-        <input type="radio" class="btn-check" name="statusFilter" id="approved" [value]="'Approved'" [(ngModel)]="selectedStatus" (change)="filterAds('Approved')">
+        <input type="radio" class="btn-check" name="statusFilter" id="approved" [value]="'3'" [(ngModel)]="selectedStatus" (change)="filterAds('3')">
         <label class="btn btn-outline-primary" for="approved">Approved</label>
 
-        <input type="radio" class="btn-check" name="statusFilter" id="pending" [value]="'Pending'" [(ngModel)]="selectedStatus" (change)="filterAds('Pending')">
+        <input type="radio" class="btn-check" name="statusFilter" id="pending" [value]="'1'" [(ngModel)]="selectedStatus" (change)="filterAds('1')">
         <label class="btn btn-outline-primary" for="pending">Pending</label>
 
-        <input type="radio" class="btn-check" name="statusFilter" id="rejected" [value]="'Rejected'" [(ngModel)]="selectedStatus" (change)="filterAds('Rejected')">
+        <input type="radio" class="btn-check" name="statusFilter" id="rejected" [value]="'2'" [(ngModel)]="selectedStatus" (change)="filterAds('2')">
         <label class="btn btn-outline-primary" for="rejected">Rejected</label>
     </div>
             </div>
             <div class="row">
           <div class="col-6">
-            <input type="text" class="form-control" id="filter-text-box" placeholder="Filter..." oninput="onFilterTextBoxChanged()"/>
+            <input type="text" class="form-control" [(ngModel)]="searchTxt" id="filter-text-box" placeholder="Filter..." (input)="onFilterTextBoxChanged()"/>
           </div>
           <div class="col-6">
             <div class="page-title-right">
@@ -44,13 +44,15 @@
         class="ag-theme-alpine" style="width: 100%; height: 500px;"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData"
+            [rowData]="filterRowData"
             [theme]="'legacy'"
             [pagination]="true"
-            [paginationPageSize]="10"
+            [paginationPageSize]="20"
             [rowSelection]="'single'"
             (gridReady)="onGridReady($event)"
-            (cellClicked)="onCellClicked($event)"
+            [components]="frameworkComponents"
+            [context]="context"
+            (rowClicked)="onRowClicked($event)"
             >
         </ag-grid-angular>
     </div>

@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ToastrMessageService } from 'src/app/core/services/toastr-message.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { ActionButtonsColumnComponent } from 'src/app/shared/action-buttons-column/action-buttons-column.component';
 import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
@@ -12,39 +15,40 @@ import { DeleteConfirmationModalComponent } from 'src/app/shared/delete-confirma
 })
 export class CategoriesComponent {
 
+
    public columnDefs: ColDef[] = [
-    { field: 'id', headerName: 'CID', sortable: true, filter: true },
-    { field: 'categoryName', headerName: 'Category Name', sortable: true, filter: true },
-    //{ field: 'subCategoryName', headerName: 'Subcategory Name', sortable: true, filter: true },
-    { 
-      field: 'status', 
-      headerName: 'Status',
-      cellRenderer: (params: any) => {
-        return `<span class="badge bg-success">Active</span>`;
-      }
-    },
-    { 
-      field: 'createdDate', 
-      headerName: 'Created Date',
-      sortable: true,
-      filter: true,
-      valueFormatter: (params) => {
-        return new Date(params.value).toLocaleDateString();
-      }
-    },
+    { valueGetter: "node.rowIndex + 1", headerName: 'Sr No.', sortable: true,width:10, filter: true },
+    { field: 'title', headerName: 'Category Name', sortable: true, filter: true },
+    { field: 'sort', headerName: 'Sort',width:20, sortable: true, filter: true },
+    // { 
+    //   field: 'status', 
+    //   headerName: 'Status',
+    //   cellRenderer: (params: any) => {
+    //     return `<span class="badge bg-success">Active</span>`;
+    //   }
+    // },
+    // { 
+    //   field: 'createdDate', 
+    //   headerName: 'Created Date',
+    //   sortable: true,
+    //   filter: true,
+    //   valueFormatter: (params) => {
+    //     return new Date(params.value).toLocaleDateString();
+    //   }
+    // },
     {
+      width:20,
       field: 'action',
       headerName: 'Action',
-      cellRenderer: (params: any) => {
-        return `
-          <div class="d-flex gap-2 align-items-center">
-            <img src="assets/images/icons/Edit Square.png" width="16" height="16" class="edit-icon"/>
-            <img src="assets/images/icons/Delete 2.png" width="16" height="16" class="delete-icon"/>
-          </div>
-        `;
-      }
+      cellRenderer: 'actionCellRenderer'
     }
   ];
+
+  context = { componentParent: this };
+
+  frameworkComponents = {
+  actionCellRenderer: ActionButtonsColumnComponent
+};
 
   public defaultColDef: ColDef = {
     flex: 1,
@@ -52,10 +56,10 @@ export class CategoriesComponent {
     resizable: true,
   };
 
-  public rowData: any[] = [{id: 1, categoryName: 'Music', subCategoryName: 'Tabla', status: 'Active', createdDate: '2023-10-01'}];
+  public rowData: any[] = [];
   public isLoading = false;
 
-  constructor(private router: Router,private modalService: NgbModal) {}
+  constructor(private router: Router,private modalService: NgbModal, private categoryService: CategoryService,private toastr: ToastrMessageService) {}
 
   ngOnInit() {
     this.loadCategories();
@@ -64,7 +68,10 @@ export class CategoriesComponent {
   loadCategories() {
     this.isLoading = true;
     // Replace this with your actual API call
-    // this.categoryService.getCategories().subscribe(...)
+    this.categoryService.getCategories().subscribe((data)=>{
+      console.log(data)
+      this.rowData = data;
+    })
     this.isLoading = false;
   }
 
@@ -72,24 +79,36 @@ export class CategoriesComponent {
     params.api.sizeColumnsToFit();
   }
 
-  onCellClicked(event: any) {
-    if (event.event.target.classList.contains('edit-icon')) {
-      this.router.navigate(['/masters/category-edit', event.data.id]);
-    } else if (event.event.target.classList.contains('delete-icon')) {
-      const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
+
+
+  onEdit(rowData: any) {
+  this.router.navigate(['/masters/category-edit', rowData.id]);
+}
+
+onDelete(rowData: any) {
+        const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
               centered: true,
               backdrop: 'static'
             });
             
             modalRef.componentInstance.title = 'Delete Category';
-            modalRef.componentInstance.message = `Are you sure you want to delete Category "${event.data.categoryName}"?`;
+            modalRef.componentInstance.message = `Are you sure you want to delete Category "${rowData.title}"?`;
             
             modalRef.result.then(
               (result) => {
                 if (result === 'delete') {
                   // Handle delete action here
-                  console.log('Deleting Category:', event.data.id);
-                  // Call your delete API
+                      this.categoryService.deleteCategory(rowData.id).subscribe({
+                        next: (data:any) => {
+                this.toastr.showSuccess('Category Deleted Successfully','Delete');
+                this.loadCategories();
+            },
+            error: (error:any) => {
+                this.isLoading = false;
+                this.toastr.showError('Error Deleting Category', 'Error');
+            }
+      
+    })
                 }
               },
               (reason) => {
@@ -97,7 +116,6 @@ export class CategoriesComponent {
                 console.log('Modal dismissed');
               }
             );
-    }
-  }
+}
 }
 
